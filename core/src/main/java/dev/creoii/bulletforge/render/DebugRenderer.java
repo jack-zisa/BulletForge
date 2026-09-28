@@ -18,7 +18,7 @@ public class DebugRenderer implements Renderer {
     }
 
     @Override
-    public void render() {
+    public void render(float delta) {
         shapeRenderer.setProjectionMatrix(main.getCamera().combined);
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);

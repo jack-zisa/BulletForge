@@ -5,5 +5,5 @@ import com.badlogic.gdx.utils.Disposable;
 public interface Renderer extends Disposable {
     void create();
 
-    void render();
+    void render(float delta);
 }

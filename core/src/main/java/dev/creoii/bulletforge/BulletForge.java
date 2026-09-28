@@ -1,6 +1,6 @@
 package dev.creoii.bulletforge;
 
-import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -9,7 +9,7 @@ import dev.creoii.bulletforge.render.DebugRenderer;
 import dev.creoii.bulletforge.render.SpriteRenderer;
 import dev.creoii.bulletforge.render.UIRenderer;
 
-public class BulletForge extends ApplicationAdapter {
+public class BulletForge extends Game {
     private OrthographicCamera camera;
     private final InputHandler inputHandler;
     private final SpriteRenderer renderer;
@@ -45,9 +45,11 @@ public class BulletForge extends ApplicationAdapter {
     public void render() {
         ScreenUtils.clear(Color.BLACK);
 
-        renderer.render();
-        if (debug) debugRenderer.render();
-        uiRenderer.render();
+        float delta = Gdx.graphics.getDeltaTime();
+
+        renderer.render(delta);
+        if (debug) debugRenderer.render(delta);
+        uiRenderer.render(delta);
     }
 
     @Override
@@ -55,6 +57,7 @@ public class BulletForge extends ApplicationAdapter {
         renderer.dispose();
         debugRenderer.dispose();
         uiRenderer.dispose();
+        GlobalAssets.dispose();
     }
 
     public OrthographicCamera getCamera() {

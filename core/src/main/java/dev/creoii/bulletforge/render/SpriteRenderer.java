@@ -17,7 +17,7 @@ public class SpriteRenderer implements Renderer {
     }
 
     @Override
-    public void render() {
+    public void render(float delta) {
         batch.setProjectionMatrix(main.getCamera().combined);
 
         batch.begin();
