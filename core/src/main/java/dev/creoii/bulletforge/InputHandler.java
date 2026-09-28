@@ -54,8 +54,17 @@ public class InputHandler extends InputAdapter {
     }
 
     public Vector3 getCenterPos() {
-        centerPos.set(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f, 0f);
+        int height = Gdx.graphics.getHeight() + ((int) UserInterface.CONTROL_BAR_HEIGHT + (int) UserInterface.TAB_BAR_HEIGHT);
+        centerPos.set(Gdx.graphics.getWidth() / 2f, height / 2f, 0f);
         main.getCamera().unproject(centerPos);
         return centerPos;
+    }
+
+    public Vector3 getDirectionToMouse(Vector3 pos) {
+        return getDirectionToMouse(pos, true);
+    }
+
+    public Vector3 getDirectionToMouse(Vector3 pos, boolean unproject) {
+        return getMousePos(unproject).cpy().sub(pos).nor();
     }
 }

@@ -1,5 +1,6 @@
 package dev.creoii.bulletforge.render;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 import dev.creoii.bulletforge.BulletForge;
@@ -30,8 +31,9 @@ public class DebugRenderer implements Renderer {
 
     public void drawMouseLine() {
         Vector3 centerPos = main.getInputHandler().getCenterPos();
-        Vector3 mousePos = main.getInputHandler().getMousePos();
-        shapeRenderer.line(centerPos.x, centerPos.y, mousePos.x, mousePos.y);
+        Vector3 mouseDir = main.getInputHandler().getDirectionToMouse(centerPos);
+        Vector3 end = centerPos.cpy().add(mouseDir.scl(Math.min(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()) * .25f));
+        shapeRenderer.line(centerPos.x, centerPos.y, end.x, end.y);
     }
 
     @Override
