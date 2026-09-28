@@ -4,11 +4,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import dev.creoii.bulletforge.BulletForge;
 import dev.creoii.bulletforge.GlobalAssets;
 
-public class HomeScreen extends AbstractScreen {
-    public HomeScreen(BulletForge main) {
+public class EditorScreen extends AbstractScreen {
+    public EditorScreen(BulletForge main) {
         super(main);
 
-        getRoot().add(new Label("Home", GlobalAssets.SKIN)).center();
+        getRoot().add(new Label("Editor", GlobalAssets.SKIN)).center();
     }
 
     @Override

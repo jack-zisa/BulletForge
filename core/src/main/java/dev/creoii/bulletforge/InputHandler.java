@@ -1,6 +1,7 @@
 package dev.creoii.bulletforge;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector3;
@@ -9,6 +10,8 @@ public class InputHandler extends InputAdapter {
     private final BulletForge main;
     private final Vector3 centerPos;
     private final Vector3 mousePos;
+
+    private int prevWindowWidth, prevWindowHeight;
 
     public InputHandler(BulletForge main) {
         this.main = main;
@@ -22,12 +25,31 @@ public class InputHandler extends InputAdapter {
             main.toggleDebug();
             return true;
         }
+
+        if (keycode == Input.Keys.F11) {
+            if (Gdx.graphics.isFullscreen()) {
+                Gdx.graphics.setWindowedMode(prevWindowWidth, prevWindowHeight);
+            } else {
+                prevWindowWidth = Gdx.graphics.getWidth();
+                prevWindowHeight = Gdx.graphics.getHeight();
+                Graphics.DisplayMode displayMode = Gdx.graphics.getDisplayMode(Gdx.graphics.getMonitor());
+                if (!Gdx.graphics.setFullscreenMode(displayMode)) {
+                    throw new IllegalStateException("Failed to enter fullscreen mode.");
+                }
+            }
+            return true;
+        }
+
         return false;
     }
 
     public Vector3 getMousePos() {
+        return getMousePos(true);
+    }
+
+    public Vector3 getMousePos(boolean unproject) {
         mousePos.set(Gdx.input.getX(), Gdx.input.getY(), 0f);
-        main.getCamera().unproject(mousePos);
+        if (unproject) main.getCamera().unproject(mousePos);
         return mousePos;
     }
 

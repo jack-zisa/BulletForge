@@ -8,11 +8,13 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import dev.creoii.bulletforge.render.DebugRenderer;
 import dev.creoii.bulletforge.render.screen.HomeScreen;
+import dev.creoii.bulletforge.render.window.Tab;
 import dev.creoii.bulletforge.render.window.WindowControlBar;
 import dev.creoii.bulletforge.render.screen.element.tooltip.TooltipProvider;
 import dev.creoii.bulletforge.util.localization.I18n;
@@ -22,6 +24,8 @@ import java.util.List;
 import java.util.Locale;
 
 public class BulletForge extends Game {
+    public static final float CONTROL_BAR_HEIGHT = 32f;
+    public static final float TAB_BAR_HEIGHT = 40f;
     private final String windowTitle;
     private OrthographicCamera camera;
     private Stage globalStage;
@@ -29,6 +33,9 @@ public class BulletForge extends Game {
     private final InputHandler inputHandler;
     private final DebugRenderer debugRenderer;
     private final I18n i18n;
+    private TabManager tabManager;
+    private WindowControlBar windowControlBar;
+    private Container<Table> screenContainer;
     private boolean debug;
 
     public BulletForge(String windowTitle) {
@@ -45,15 +52,13 @@ public class BulletForge extends Game {
         camera.setToOrtho(false, 1280, 720);
 
         globalStage = new Stage(new ScreenViewport());
-        createWindowControlBar();
+        createGlobalActors();
 
         input.addProcessor(globalStage);
 
         Gdx.input.setInputProcessor(input);
 
         debugRenderer.create();
-
-        setScreen(new HomeScreen(this));
     }
 
     @Override
@@ -90,6 +95,14 @@ public class BulletForge extends Game {
         return camera;
     }
 
+    public Stage getGlobalStage() {
+        return globalStage;
+    }
+
+    public Container<Table> getScreenContainer() {
+        return screenContainer;
+    }
+
     public InputMultiplexer getInput() {
         return input;
     }
@@ -102,18 +115,28 @@ public class BulletForge extends Game {
         return i18n;
     }
 
+    public WindowControlBar getWindowControlBar() {
+        return windowControlBar;
+    }
+
+    public TabManager getTabManager() {
+        return tabManager;
+    }
+
     public void toggleDebug() {
         debug = !debug;
     }
 
-    private void createWindowControlBar() {
+    private void createGlobalActors() {
         Table root = new Table();
         root.setFillParent(true);
 
-        root.add(new WindowControlBar(this)).height(32f).growX().top().row();
-        root.add().expand().fill();
-
+        root.add(windowControlBar = new WindowControlBar(this)).height(CONTROL_BAR_HEIGHT).growX().top().row();
+        root.add(tabManager = new TabManager(this)).height(TAB_BAR_HEIGHT).growX().top().row();
+        root.add(screenContainer = new Container<>()).grow().fill();
         globalStage.addActor(root);
+
+        tabManager.addTab(0, new Tab(this, "Home", new HomeScreen(this)));
 
         collectTooltips(root, new ArrayList<>()).forEach(globalStage::addActor);
     }

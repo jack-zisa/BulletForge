@@ -14,9 +14,7 @@ public class AbstractScreen implements Screen {
     public AbstractScreen(BulletForge main) {
         this.main = main;
         stage = new Stage(new ScreenViewport());
-
-        root = new Table();
-        root.setFillParent(true);
+        stage.addActor(root = new Table());
     }
 
     @Override
