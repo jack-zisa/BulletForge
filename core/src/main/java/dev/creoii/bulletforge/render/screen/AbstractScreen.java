@@ -15,7 +15,6 @@ public class AbstractScreen implements Screen {
     public AbstractScreen(BulletForge main) {
         this.main = main;
         stage = new Stage(new ScreenViewport());
-        stage.getBatch().disableBlending();
 
         root = new Table();
         root.setFillParent(true);
