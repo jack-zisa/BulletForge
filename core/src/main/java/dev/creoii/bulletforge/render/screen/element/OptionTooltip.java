@@ -1,10 +1,9 @@
 package dev.creoii.bulletforge.render.screen.element;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import dev.creoii.bulletforge.GlobalAssets;
+import dev.creoii.bulletforge.render.screen.element.option.OptionProvider;
 
 public class OptionTooltip extends Table {
     private final Actor owner;
@@ -12,17 +11,20 @@ public class OptionTooltip extends Table {
     public OptionTooltip(Actor owner) {
         this.owner = owner;
 
-        setTouchable(Touchable.disabled);
         setVisible(false);
 
-        add(new Label("New", GlobalAssets.SKIN)).row();
-        add(new Label("Open", GlobalAssets.SKIN));
+        if (owner instanceof OptionProvider optionProvider) {
+            optionProvider.getOptions().forEach(actor -> {
+                add(actor).row();
+            });
+        } else throw new IllegalArgumentException("Cannot create an OptionTooltip without an OptionProvider.");
     }
 
     public void show() {
         pack();
 
-        setPosition(owner.getX(), owner.getY() - getHeight());
+        Vector2 position = owner.localToStageCoordinates(new Vector2());
+        setPosition(position.x, position.y - getHeight());
 
         toFront();
         setVisible(true);

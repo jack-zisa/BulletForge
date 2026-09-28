@@ -5,7 +5,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import dev.creoii.bulletforge.BulletForge;
-import dev.creoii.bulletforge.render.screen.element.WindowControlBar;
 
 public class AbstractScreen implements Screen {
     private final BulletForge main;
@@ -18,11 +17,6 @@ public class AbstractScreen implements Screen {
 
         root = new Table();
         root.setFillParent(true);
-
-        root.add(new WindowControlBar(main)).height(32f).growX().top().row();
-        root.add().expand().fill();
-
-        stage.addActor(root);
     }
 
     @Override

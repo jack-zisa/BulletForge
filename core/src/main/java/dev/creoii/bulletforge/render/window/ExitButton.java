@@ -1,15 +1,16 @@
-package dev.creoii.bulletforge.render.screen.element;
+package dev.creoii.bulletforge.render.window;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import dev.creoii.bulletforge.BulletForge;
 import dev.creoii.bulletforge.GlobalAssets;
 
-public class ExitButton extends TextButton {
+public class ExitButton extends ImageButton {
     public ExitButton(BulletForge main) {
-        super(main.getI18n().get("window.controlBar.exit"), GlobalAssets.SKIN);
+        super(new TextureRegionDrawable(GlobalAssets.EXIT_ICON));
 
         addListener(new ClickListener() {
             @Override

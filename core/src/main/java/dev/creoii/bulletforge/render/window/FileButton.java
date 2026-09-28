@@ -1,12 +1,18 @@
-package dev.creoii.bulletforge.render.screen.element;
+package dev.creoii.bulletforge.render.window;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import dev.creoii.bulletforge.BulletForge;
 import dev.creoii.bulletforge.GlobalAssets;
+import dev.creoii.bulletforge.render.screen.element.OptionTooltip;
+import dev.creoii.bulletforge.render.screen.element.option.OptionProvider;
+import dev.creoii.bulletforge.render.screen.element.tooltip.TooltipProvider;
 
-public class FileButton extends TextButton {
+import java.util.List;
+
+public class FileButton extends TextButton implements TooltipProvider, OptionProvider {
     private final OptionTooltip tooltip;
 
     public FileButton(BulletForge main) {
@@ -22,7 +28,16 @@ public class FileButton extends TextButton {
         });
     }
 
+    @Override
     public OptionTooltip getTooltip() {
         return tooltip;
+    }
+
+    @Override
+    public List<Actor> getOptions() {
+        return List.of(
+            new TextButton("New", GlobalAssets.SKIN),
+            new TextButton("Open", GlobalAssets.SKIN)
+        );
     }
 }

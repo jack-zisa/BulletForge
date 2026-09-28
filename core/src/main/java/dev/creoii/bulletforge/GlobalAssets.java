@@ -1,6 +1,7 @@
 package dev.creoii.bulletforge;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -9,6 +10,10 @@ public final class GlobalAssets {
     public static final Skin SKIN = new Skin(Gdx.files.internal("uiskin.json"));
     public static final BitmapFont FONT = SKIN.getFont("default-font");
     private static final ShaderProgram BORDER_SHADER = new ShaderProgram(Gdx.files.internal("shaders/border.vert"), Gdx.files.internal("shaders/border.frag"));
+
+    public static final Texture EXIT_ICON = new Texture(Gdx.files.internal("sprites/ui/exit.png"));
+    public static final Texture MINIMIZE_ICON = new Texture(Gdx.files.internal("sprites/ui/minimize.png"));
+    public static final Texture MAXIMIZE_ICON = new Texture(Gdx.files.internal("sprites/ui/maximize.png"));
 
     public static void dispose() {
         SKIN.dispose();
