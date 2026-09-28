@@ -13,6 +13,7 @@ import dev.creoii.bulletforge.util.localization.I18n;
 import java.util.Locale;
 
 public class BulletForge extends Game {
+    private final String windowTitle;
     private OrthographicCamera camera;
     private final InputMultiplexer input;
     private final InputHandler inputHandler;
@@ -20,7 +21,8 @@ public class BulletForge extends Game {
     private final I18n i18n;
     private boolean debug;
 
-    public BulletForge() {
+    public BulletForge(String windowTitle) {
+        this.windowTitle = windowTitle;
         input = new InputMultiplexer();
         input.addProcessor(inputHandler = new InputHandler(this));
         debugRenderer = new DebugRenderer(this);
@@ -57,6 +59,10 @@ public class BulletForge extends Game {
     public void dispose() {
         debugRenderer.dispose();
         GlobalAssets.dispose();
+    }
+
+    public String getWindowTitle() {
+        return windowTitle;
     }
 
     public OrthographicCamera getCamera() {

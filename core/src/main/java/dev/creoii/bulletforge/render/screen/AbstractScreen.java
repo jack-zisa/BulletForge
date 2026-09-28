@@ -19,7 +19,7 @@ public class AbstractScreen implements Screen {
         root = new Table();
         root.setFillParent(true);
 
-        root.add(new WindowControlBar(main)).height(32f).top().left().row();
+        root.add(new WindowControlBar(main)).height(32f).growX().top().row();
         root.add().expand().fill();
 
         stage.addActor(root);
