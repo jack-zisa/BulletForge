@@ -28,7 +28,7 @@ public class Tab extends Table {
         closeButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                main.getTabManager().removeTab(index);
+                main.getUserInterface().getTabManager().removeTab(index);
             }
         });
         add(titleLabel = new Label(title, GlobalAssets.SKIN));
@@ -37,8 +37,8 @@ public class Tab extends Table {
         addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (main.getTabManager().getSelectedTabIndex() == index) return;
-                main.getTabManager().selectTab(index);
+                if (main.getUserInterface().getTabManager().getSelectedTabIndex() == index) return;
+                main.getUserInterface().getTabManager().selectTab(index);
             }
         });
     }

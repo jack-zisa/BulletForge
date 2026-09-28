@@ -42,7 +42,7 @@ public class FileButton extends TextButton implements TooltipProvider, OptionPro
         newButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                main.getTabManager().addTab(-1, new Tab(main, "Editor", new EditorScreen(main)));
+                main.getUserInterface().getTabManager().addTab(-1, new Tab(main, "Editor", new EditorScreen(main)));
             }
         });
         return List.of(

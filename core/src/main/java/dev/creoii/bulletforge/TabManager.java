@@ -36,7 +36,7 @@ public class TabManager extends Table {
             }
 
             if (getChildren().size > 0) selectTab(selectedTabIndex);
-            else main.getScreenContainer().clearChildren();
+            else main.getUserInterface().getScreenContainer().clearChildren();
         }
     }
 
@@ -69,7 +69,7 @@ public class TabManager extends Table {
 
     public void selectTab(int i) {
         if (i < 0 || i >= getChildren().size) {
-            main.getScreenContainer().clearChildren();
+            main.getUserInterface().getScreenContainer().clearChildren();
             return;
         }
 
@@ -79,7 +79,7 @@ public class TabManager extends Table {
             ((Tab) getChild(j)).setSelected(j == i);
         }
 
-        main.getScreenContainer().clearChildren();
-        main.getScreenContainer().setActor(((Tab) getChild(i)).getScreen().getRoot());
+        main.getUserInterface().getScreenContainer().clearChildren();
+        main.getUserInterface().getScreenContainer().setActor(((Tab) getChild(i)).getScreen().getRoot());
     }
 }
