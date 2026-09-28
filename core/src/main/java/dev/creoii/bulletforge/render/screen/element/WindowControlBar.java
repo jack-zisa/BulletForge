@@ -8,10 +8,14 @@ import dev.creoii.bulletforge.GlobalAssets;
 
 public class WindowControlBar extends Table {
     public WindowControlBar(BulletForge main) {
-        add(new FileButton(main)).left();
+        FileButton fileButton = new FileButton(main);
+        add(fileButton).left();
+        add(fileButton.getTooltip());
+
         Label title = new Label(main.getWindowTitle(), GlobalAssets.SKIN);
         title.setAlignment(Align.center);
         add(title).growX();
+
         add(new ExitButton(main)).right();
     }
 }
