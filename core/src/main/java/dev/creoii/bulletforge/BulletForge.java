@@ -2,26 +2,29 @@ package dev.creoii.bulletforge;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.ScreenUtils;
 import dev.creoii.bulletforge.render.DebugRenderer;
-import dev.creoii.bulletforge.render.SpriteRenderer;
-import dev.creoii.bulletforge.render.UIRenderer;
+import dev.creoii.bulletforge.render.screen.HomeScreen;
+import dev.creoii.bulletforge.util.localization.I18n;
+
+import java.util.Locale;
 
 public class BulletForge extends Game {
     private OrthographicCamera camera;
+    private final InputMultiplexer input;
     private final InputHandler inputHandler;
-    private final SpriteRenderer renderer;
     private final DebugRenderer debugRenderer;
-    private final UIRenderer uiRenderer;
+    private final I18n i18n;
     private boolean debug;
 
     public BulletForge() {
-        inputHandler = new InputHandler(this);
-        renderer = new SpriteRenderer(this);
+        input = new InputMultiplexer();
+        input.addProcessor(inputHandler = new InputHandler(this));
         debugRenderer = new DebugRenderer(this);
-        uiRenderer = new UIRenderer(this);
+        i18n = new I18n(Locale.ENGLISH);
     }
 
     @Override
@@ -29,11 +32,11 @@ public class BulletForge extends Game {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 1280, 720);
 
-        Gdx.input.setInputProcessor(inputHandler);
+        Gdx.input.setInputProcessor(input);
 
-        renderer.create();
         debugRenderer.create();
-        uiRenderer.create();
+
+        setScreen(new HomeScreen(this));
     }
 
     @Override
@@ -45,18 +48,14 @@ public class BulletForge extends Game {
     public void render() {
         ScreenUtils.clear(Color.BLACK);
 
-        float delta = Gdx.graphics.getDeltaTime();
+        super.render();
 
-        renderer.render(delta);
-        if (debug) debugRenderer.render(delta);
-        uiRenderer.render(delta);
+        if (debug) debugRenderer.render(Gdx.graphics.getDeltaTime());
     }
 
     @Override
     public void dispose() {
-        renderer.dispose();
         debugRenderer.dispose();
-        uiRenderer.dispose();
         GlobalAssets.dispose();
     }
 
@@ -64,8 +63,16 @@ public class BulletForge extends Game {
         return camera;
     }
 
+    public InputMultiplexer getInput() {
+        return input;
+    }
+
     public InputHandler getInputHandler() {
         return inputHandler;
+    }
+
+    public I18n getI18n() {
+        return i18n;
     }
 
     public void toggleDebug() {

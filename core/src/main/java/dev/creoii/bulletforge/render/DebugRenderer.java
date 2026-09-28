@@ -23,11 +23,15 @@ public class DebugRenderer implements Renderer {
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
+        drawMouseLine();
+
+        shapeRenderer.end();
+    }
+
+    public void drawMouseLine() {
         Vector3 centerPos = main.getInputHandler().getCenterPos();
         Vector3 mousePos = main.getInputHandler().getMousePos();
         shapeRenderer.line(centerPos.x, centerPos.y, mousePos.x, mousePos.y);
-
-        shapeRenderer.end();
     }
 
     @Override
