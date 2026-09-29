@@ -1,6 +1,7 @@
 package dev.creoii.bulletforge.bullet;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.utils.Pool;
 import dev.creoii.bulletforge.BulletForge;
 import dev.creoii.bulletforge.render.Renderable;
 import dev.creoii.bulletforge.render.screen.EditorScreen;
@@ -12,6 +13,12 @@ import java.util.function.Consumer;
 public class BulletManager implements Tickable, Renderable {
     private final BulletForge main;
     private final EditorScreen parent;
+    private final Pool<Bullet> bulletPool = new Pool<>() {
+        @Override
+        protected Bullet newObject() {
+            return new Bullet();
+        }
+    };
     private final Map<Long, Bullet> bullets;
     private final Set<Long> toRemove;
     private final PriorityQueue<Long> ids;
@@ -43,8 +50,8 @@ public class BulletManager implements Tickable, Renderable {
         forEach(bullet -> bullet.render(batch));
     }
 
-    public Map<Long, Bullet> getBullets() {
-        return bullets;
+    public Pool<Bullet> getBulletPool() {
+        return bulletPool;
     }
 
     public void addBullet(Bullet bullet) {
@@ -59,7 +66,9 @@ public class BulletManager implements Tickable, Renderable {
     }
 
     public void removeBullet(long id) {
-        if (bullets.remove(id) != null) {
+        Bullet removed;
+        if ((removed = bullets.remove(id)) != null) {
+            bulletPool.free(removed);
             ids.add(id);
         }
     }

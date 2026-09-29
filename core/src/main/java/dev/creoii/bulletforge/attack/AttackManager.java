@@ -102,7 +102,8 @@ public class AttackManager implements InputProcessor, Tickable {
                 float rotatedX = mouseDir.x * cos - mouseDir.y * sin;
                 float rotatedY = mouseDir.y * cos + mouseDir.x * sin;
 
-                Bullet bullet = new Bullet(BulletDefinition.DEFAULT);
+                Bullet bullet = parent.getBulletManager().getBulletPool().obtain();
+                bullet.set(BulletDefinition.DEFAULT);
                 bullet.spawn(new Vector2(x, y), new Vector2(rotatedX, rotatedY));
                 parent.getBulletManager().addBullet(bullet);
             }
