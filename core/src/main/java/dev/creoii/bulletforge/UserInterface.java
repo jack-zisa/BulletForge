@@ -8,6 +8,7 @@ import dev.creoii.bulletforge.render.screen.AbstractScreen;
 import dev.creoii.bulletforge.render.screen.EditorScreen;
 import dev.creoii.bulletforge.render.screen.HomeScreen;
 import dev.creoii.bulletforge.render.screen.element.AutofireButton;
+import dev.creoii.bulletforge.render.screen.element.TargetMouseButton;
 import dev.creoii.bulletforge.render.screen.element.tooltip.TooltipProvider;
 import dev.creoii.bulletforge.render.screen.element.Tab;
 import dev.creoii.bulletforge.render.window.WindowControlBar;
@@ -23,6 +24,7 @@ public class UserInterface {
     private WindowControlBar windowControlBar;
     private Container<Table> screenContainer;
     private AutofireButton autofireButton;
+    private TargetMouseButton targetMouseButton;
     private AbstractScreen activeScreen;
 
     public UserInterface(BulletForge main) {
@@ -60,6 +62,7 @@ public class UserInterface {
             activeScreen.show();
 
             autofireButton.setVisible(activeScreen instanceof EditorScreen);
+            targetMouseButton.setVisible(activeScreen instanceof EditorScreen);
         }
     }
 
@@ -74,6 +77,7 @@ public class UserInterface {
         root.add(windowControlBar = new WindowControlBar(main)).height(CONTROL_BAR_HEIGHT).growX().top().row();
         root.add(tabManager = new TabManager(main)).height(TAB_BAR_HEIGHT).growX().top().row();
         root.add(autofireButton = new AutofireButton(main)).left().row();
+        root.add(targetMouseButton = new TargetMouseButton(main)).left().row();
         root.add(screenContainer = new Container<>()).grow().fill().row();
 
         tabManager.addTab(-1, Tab.createHome(main, new HomeScreen(main)));

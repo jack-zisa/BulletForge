@@ -15,6 +15,7 @@ public class AttackManager implements InputProcessor, Tickable {
     private final BulletForge main;
     private final EditorScreen parent;
     private boolean autofire;
+    private boolean targetMouse;
     private boolean attacking;
     private float attackTime;
 
@@ -22,6 +23,7 @@ public class AttackManager implements InputProcessor, Tickable {
         this.main = main;
         this.parent = parent;
         autofire = true;
+        targetMouse = true;
     }
 
     @Override
@@ -91,7 +93,7 @@ public class AttackManager implements InputProcessor, Tickable {
                 float baseAngle = -attack.arcGap() * (attack.bulletCount() - 1) / 2f;
 
                 Vector3 center = main.getInputHandler().getCenterPos();
-                Vector3 mouseDir = main.getInputHandler().getDirectionToMouse(center);
+                Vector3 mouseDir = targetMouse ? main.getInputHandler().getDirectionToMouse(center) : Vector3.X;
 
                 Vector2 up = new Vector2(-mouseDir.y, mouseDir.x);
                 float x = center.x + mouseDir.x * up.x;
@@ -123,5 +125,13 @@ public class AttackManager implements InputProcessor, Tickable {
     public void setAutofire(boolean autofire) {
         this.autofire = autofire;
         if (autofire) attacking = false;
+    }
+
+    public boolean shouldTargetMouse() {
+        return targetMouse;
+    }
+
+    public void setTargetMouse(boolean targetMouse) {
+        this.targetMouse = targetMouse;
     }
 }
