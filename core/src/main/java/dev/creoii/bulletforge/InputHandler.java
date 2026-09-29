@@ -7,12 +7,17 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector3;
 import dev.creoii.bulletforge.render.screen.EditorScreen;
 
+import java.util.Arrays;
+
 public class InputHandler extends InputAdapter {
     private final BulletForge main;
     private final Vector3 centerPos;
     private final Vector3 mousePos;
 
     private int prevWindowWidth, prevWindowHeight;
+
+    private static final float[] ZOOM_LEVELS = {.25f, .5f, 1f, 1.5f, 2f, 2.5f};
+    private float zoom = 1f;
 
     public InputHandler(BulletForge main) {
         this.main = main;
@@ -44,6 +49,14 @@ public class InputHandler extends InputAdapter {
         return false;
     }
 
+    @Override
+    public boolean scrolled(float amountX, float amountY) {
+        updateZoom(amountY);
+        main.getCamera().zoom = zoom;
+        main.getCamera().update();
+        return true;
+    }
+
     public Vector3 getMousePos() {
         return getMousePos(true);
     }
@@ -68,5 +81,17 @@ public class InputHandler extends InputAdapter {
 
     public Vector3 getDirectionToMouse(Vector3 pos, boolean unproject) {
         return getMousePos(unproject).cpy().sub(pos).nor();
+    }
+
+    public void updateZoom(float amountY) {
+        int index = Arrays.binarySearch(ZOOM_LEVELS, zoom);
+        if (index < 0)
+            index = -index - 1;
+
+        if (amountY > .25f && index < ZOOM_LEVELS.length - 1) {
+            zoom = ZOOM_LEVELS[index + 1];
+        } else if (amountY < -.25f && index > 0) {
+            zoom = ZOOM_LEVELS[index - 1];
+        }
     }
 }

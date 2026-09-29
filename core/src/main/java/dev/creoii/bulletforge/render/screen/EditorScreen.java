@@ -40,6 +40,7 @@ public class EditorScreen extends AbstractScreen {
         attackManager.tick(delta);
         bulletManager.tick(delta);
 
+        getStage().getBatch().setProjectionMatrix(main.getCamera().combined);
         getStage().getBatch().begin();
         bulletManager.render(getStage().getBatch());
         getStage().getBatch().end();
