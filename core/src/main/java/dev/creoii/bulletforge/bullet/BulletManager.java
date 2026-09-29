@@ -82,4 +82,8 @@ public class BulletManager implements Tickable, Renderable {
     public void forEach(Consumer<Bullet> action) {
         bullets.values().forEach(action);
     }
+
+    public int count() {
+        return bullets.size();
+    }
 }

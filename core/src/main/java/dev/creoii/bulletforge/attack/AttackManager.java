@@ -109,7 +109,7 @@ public class AttackManager implements InputProcessor, Tickable {
 
                     Bullet bullet = parent.getBulletManager().getBulletPool().obtain();
                     bullet.set(parent.getBullet());
-                    bullet.spawn(new Vector2(x, y), new Vector2(rotatedX, rotatedY));
+                    bullet.spawn(x, y, rotatedX, rotatedY);
                     parent.getBulletManager().addBullet(bullet);
                 }
             }
