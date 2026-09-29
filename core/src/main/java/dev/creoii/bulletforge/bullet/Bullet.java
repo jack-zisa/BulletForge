@@ -30,14 +30,15 @@ public class Bullet implements Tickable, Renderable, Pool.Poolable {
         Vector2 velocity = definition.velocity().cpy().rotateDeg(direction.angleDeg());
         pos.mulAdd(velocity, dt);
 
-        if ((age += dt) >= definition.lifetime()) {
+        if ((age += dt) >= (definition.lifetime() / 1000f)) {
             setDead(true);
         }
     }
 
     @Override
     public void render(Batch batch) {
-        batch.draw(GlobalAssets.DEFAULT_BULLET, pos.x, pos.y);
+        float scale = definition.display().scale();
+        batch.draw(GlobalAssets.DEFAULT_BULLET, pos.x - (scale / 2f), pos.y - (scale / 2f), scale, scale);
     }
 
     @Override

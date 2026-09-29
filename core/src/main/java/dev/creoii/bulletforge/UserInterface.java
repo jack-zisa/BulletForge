@@ -9,7 +9,7 @@ import dev.creoii.bulletforge.render.screen.EditorScreen;
 import dev.creoii.bulletforge.render.screen.HomeScreen;
 import dev.creoii.bulletforge.render.screen.element.AutofireButton;
 import dev.creoii.bulletforge.render.screen.element.tooltip.TooltipProvider;
-import dev.creoii.bulletforge.render.window.Tab;
+import dev.creoii.bulletforge.render.screen.element.Tab;
 import dev.creoii.bulletforge.render.window.WindowControlBar;
 
 import java.util.ArrayList;
@@ -56,6 +56,7 @@ public class UserInterface {
 
         if (activeScreen != null) {
             screenContainer.setActor(activeScreen.getRoot());
+            screenContainer.fill();
             activeScreen.show();
 
             autofireButton.setVisible(activeScreen instanceof EditorScreen);
@@ -72,8 +73,8 @@ public class UserInterface {
 
         root.add(windowControlBar = new WindowControlBar(main)).height(CONTROL_BAR_HEIGHT).growX().top().row();
         root.add(tabManager = new TabManager(main)).height(TAB_BAR_HEIGHT).growX().top().row();
+        root.add(autofireButton = new AutofireButton(main)).left().row();
         root.add(screenContainer = new Container<>()).grow().fill().row();
-        root.add(autofireButton = new AutofireButton(main)).left();
 
         tabManager.addTab(-1, new Tab(main, "Home", new HomeScreen(main)));
 

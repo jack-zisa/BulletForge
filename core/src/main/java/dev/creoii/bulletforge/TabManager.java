@@ -3,7 +3,7 @@ package dev.creoii.bulletforge;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import dev.creoii.bulletforge.render.window.Tab;
+import dev.creoii.bulletforge.render.screen.element.Tab;
 
 public class TabManager extends Table {
     private final BulletForge main;

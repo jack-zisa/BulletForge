@@ -8,7 +8,6 @@ import com.badlogic.gdx.math.Vector3;
 import dev.creoii.bulletforge.BulletForge;
 import dev.creoii.bulletforge.bullet.Bullet;
 import dev.creoii.bulletforge.definition.AttackDefinition;
-import dev.creoii.bulletforge.definition.BulletDefinition;
 import dev.creoii.bulletforge.render.screen.EditorScreen;
 import dev.creoii.bulletforge.util.Tickable;
 
@@ -17,6 +16,7 @@ public class AttackManager implements InputProcessor, Tickable {
     private final EditorScreen parent;
     private boolean autofire;
     private boolean attacking;
+    private float attackTime;
 
     public AttackManager(BulletForge main, EditorScreen parent) {
         this.main = main;
@@ -81,33 +81,39 @@ public class AttackManager implements InputProcessor, Tickable {
     @Override
     public void tick(float dt) {
         if (autofire || attacking) {
-            AttackDefinition attack = AttackDefinition.DEFAULT;
+            AttackDefinition attack = parent.getAttack();
 
-            float baseAngle = -attack.arcGap() * (attack.bulletCount() - 1) / 2f;
+            attackTime -= dt;
 
-            Vector3 center = main.getInputHandler().getCenterPos();
-            Vector3 mouseDir = main.getInputHandler().getDirectionToMouse(center);
+            if (attackTime <= 0f) {
+                attackTime += attack.attackSpeed() / 1000f;
 
-            Vector2 up = new Vector2(-mouseDir.y, mouseDir.x);
-            float x = center.x + mouseDir.x * up.x;
-            float y = center.y + mouseDir.y * up.y;
+                float baseAngle = -attack.arcGap() * (attack.bulletCount() - 1) / 2f;
 
-            for (int i = 0; i < attack.bulletCount(); ++i) {
-                float angle = (baseAngle + i * attack.arcGap()) + attack.angleOffset();
+                Vector3 center = main.getInputHandler().getCenterPos();
+                Vector3 mouseDir = main.getInputHandler().getDirectionToMouse(center);
 
-                float radians = angle * MathUtils.degreesToRadians;
-                float cos = MathUtils.cos(radians);
-                float sin = MathUtils.sin(radians);
+                Vector2 up = new Vector2(-mouseDir.y, mouseDir.x);
+                float x = center.x + mouseDir.x * up.x;
+                float y = center.y + mouseDir.y * up.y;
 
-                float rotatedX = mouseDir.x * cos - mouseDir.y * sin;
-                float rotatedY = mouseDir.y * cos + mouseDir.x * sin;
+                for (int i = 0; i < attack.bulletCount(); ++i) {
+                    float angle = (baseAngle + i * attack.arcGap()) + attack.angleOffset();
 
-                Bullet bullet = parent.getBulletManager().getBulletPool().obtain();
-                bullet.set(BulletDefinition.DEFAULT);
-                bullet.spawn(new Vector2(x, y), new Vector2(rotatedX, rotatedY));
-                parent.getBulletManager().addBullet(bullet);
+                    float radians = angle * MathUtils.degreesToRadians;
+                    float cos = MathUtils.cos(radians);
+                    float sin = MathUtils.sin(radians);
+
+                    float rotatedX = mouseDir.x * cos - mouseDir.y * sin;
+                    float rotatedY = mouseDir.y * cos + mouseDir.x * sin;
+
+                    Bullet bullet = parent.getBulletManager().getBulletPool().obtain();
+                    bullet.set(parent.getBullet());
+                    bullet.spawn(new Vector2(x, y), new Vector2(rotatedX, rotatedY));
+                    parent.getBulletManager().addBullet(bullet);
+                }
             }
-        }
+        } else attackTime += dt;
     }
 
     public boolean isAutofire() {

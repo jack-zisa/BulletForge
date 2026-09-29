@@ -8,6 +8,7 @@ import dev.creoii.bulletforge.BulletForge;
 import dev.creoii.bulletforge.GlobalAssets;
 import dev.creoii.bulletforge.render.screen.EditorScreen;
 import dev.creoii.bulletforge.render.screen.element.OptionTooltip;
+import dev.creoii.bulletforge.render.screen.element.Tab;
 import dev.creoii.bulletforge.render.screen.element.option.OptionProvider;
 import dev.creoii.bulletforge.render.screen.element.tooltip.TooltipProvider;
 

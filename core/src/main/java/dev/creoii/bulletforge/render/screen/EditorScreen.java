@@ -1,19 +1,43 @@
 package dev.creoii.bulletforge.render.screen;
 
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import dev.creoii.bulletforge.BulletForge;
+import dev.creoii.bulletforge.GlobalAssets;
 import dev.creoii.bulletforge.attack.AttackManager;
 import dev.creoii.bulletforge.bullet.BulletManager;
+import dev.creoii.bulletforge.definition.AttackDefinition;
+import dev.creoii.bulletforge.definition.BulletDefinition;
+import dev.creoii.bulletforge.definition.DisplayDefinition;
+import dev.creoii.bulletforge.render.screen.element.editor.EditorPane;
 
 public class EditorScreen extends AbstractScreen {
+    public static final float EDITOR_PANE_WIDTH = 300f;
     private final BulletForge main;
     private final AttackManager attackManager;
     private final BulletManager bulletManager;
+    private final EditorPane editorPane;
+
+    private final AttackDefinition attack;
+    private final BulletDefinition bullet;
+    private final DisplayDefinition display;
 
     public EditorScreen(BulletForge main) {
         super(main);
         this.main = main;
         attackManager = new AttackManager(main, this);
         bulletManager = new BulletManager(main, this);
+
+        attack = AttackDefinition.DEFAULT.copy();
+        bullet = BulletDefinition.DEFAULT.copy();
+        display = DisplayDefinition.DEFAULT.copy();
+
+        getRoot().setFillParent(true);
+        getRoot().top().right();
+
+        ScrollPane scrollPane = new ScrollPane(editorPane = new EditorPane(this), GlobalAssets.SKIN);
+        scrollPane.setFadeScrollBars(false);
+
+        getRoot().add(scrollPane).width(EDITOR_PANE_WIDTH).growY().top().right();
     }
 
     @Override
@@ -46,5 +70,21 @@ public class EditorScreen extends AbstractScreen {
 
     public BulletManager getBulletManager() {
         return bulletManager;
+    }
+
+    public EditorPane getEditorPane() {
+        return editorPane;
+    }
+
+    public AttackDefinition getAttack() {
+        return attack;
+    }
+
+    public BulletDefinition getBullet() {
+        return bullet;
+    }
+
+    public DisplayDefinition getDisplay() {
+        return display;
     }
 }
