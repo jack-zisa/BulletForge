@@ -75,6 +75,12 @@ public final class BulletDefinition {
         return new BulletDefinition(lifetime, velocity.cpy(), display.copy());
     }
 
+    public void set(BulletDefinition attack) {
+        this.lifetime = attack.lifetime;
+        velocity.set(attack.velocity);
+        display.set(attack.display);
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == this) return true;

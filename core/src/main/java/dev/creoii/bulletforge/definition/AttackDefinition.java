@@ -68,6 +68,13 @@ public final class AttackDefinition {
         return new AttackDefinition(attackSpeed, bulletCount, arcGap, angleOffset);
     }
 
+    public void set(AttackDefinition attack) {
+        this.attackSpeed = attack.attackSpeed;
+        this.bulletCount = attack.bulletCount;
+        this.arcGap = attack.arcGap;
+        this.angleOffset = attack.angleOffset;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == this) return true;

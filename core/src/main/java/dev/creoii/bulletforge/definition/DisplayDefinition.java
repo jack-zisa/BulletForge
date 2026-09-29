@@ -60,6 +60,12 @@ public final class DisplayDefinition {
         return new DisplayDefinition(spriteId, scale, shaderId);
     }
 
+    public void set(DisplayDefinition display) {
+        this.spriteId = display.spriteId;
+        this.scale = display.scale;
+        this.shaderId = display.shaderId;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == this) return true;
