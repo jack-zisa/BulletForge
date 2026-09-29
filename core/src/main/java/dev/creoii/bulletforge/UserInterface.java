@@ -5,7 +5,9 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import dev.creoii.bulletforge.render.screen.AbstractScreen;
+import dev.creoii.bulletforge.render.screen.EditorScreen;
 import dev.creoii.bulletforge.render.screen.HomeScreen;
+import dev.creoii.bulletforge.render.screen.element.AutofireButton;
 import dev.creoii.bulletforge.render.screen.element.tooltip.TooltipProvider;
 import dev.creoii.bulletforge.render.window.Tab;
 import dev.creoii.bulletforge.render.window.WindowControlBar;
@@ -20,6 +22,7 @@ public class UserInterface {
     private TabManager tabManager;
     private WindowControlBar windowControlBar;
     private Container<Table> screenContainer;
+    private AutofireButton autofireButton;
     private AbstractScreen activeScreen;
 
     public UserInterface(BulletForge main) {
@@ -54,7 +57,13 @@ public class UserInterface {
         if (activeScreen != null) {
             screenContainer.setActor(activeScreen.getRoot());
             activeScreen.show();
+
+            autofireButton.setVisible(activeScreen instanceof EditorScreen);
         }
+    }
+
+    public AbstractScreen getActiveScreen() {
+        return activeScreen;
     }
 
     protected void createGlobalActors() {
@@ -63,7 +72,8 @@ public class UserInterface {
 
         root.add(windowControlBar = new WindowControlBar(main)).height(CONTROL_BAR_HEIGHT).growX().top().row();
         root.add(tabManager = new TabManager(main)).height(TAB_BAR_HEIGHT).growX().top().row();
-        root.add(screenContainer = new Container<>()).grow().fill();
+        root.add(screenContainer = new Container<>()).grow().fill().row();
+        root.add(autofireButton = new AutofireButton(main)).left();
 
         tabManager.addTab(-1, new Tab(main, "Home", new HomeScreen(main)));
 
