@@ -18,7 +18,7 @@ public record RandomNumberProvider(float min, float max) implements NumberProvid
 
     @Override
     public Type getType() {
-        return Type.CONSTANT;
+        return Type.RANDOM;
     }
 
     @Override

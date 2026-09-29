@@ -14,6 +14,10 @@ public record ConstantNumberProvider(float value) implements NumberProvider {
         ).apply(instance, ConstantNumberProvider::new)
     );
 
+    public static ConstantNumberProvider of(float value) {
+        return new ConstantNumberProvider(value);
+    }
+
     @Override
     public Type getType() {
         return Type.CONSTANT;

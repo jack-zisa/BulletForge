@@ -43,9 +43,7 @@ public class Bullet implements Tickable, Renderable, Pool.Poolable, ContextProvi
 
         if ((age += dt) >= (definition.lifetime() / 1000f)) {
             setDead(true);
-        }
-
-        updateContext();
+        } else updateContext();
     }
 
     @Override
@@ -56,13 +54,14 @@ public class Bullet implements Tickable, Renderable, Pool.Poolable, ContextProvi
 
     @Override
     public void reset() {
-        context.clear();
         definition = null;
         id = -1L;
         age = 0f;
         pos.setZero();
         direction.setZero();
         dead = false;
+
+        updateContext();
     }
 
     @Override
