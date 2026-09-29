@@ -1,12 +1,18 @@
 package dev.creoii.bulletforge.render.window;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.google.gson.JsonElement;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.JsonOps;
 import dev.creoii.bulletforge.BulletForge;
 import dev.creoii.bulletforge.GlobalAssets;
+import dev.creoii.bulletforge.editor.EditorConfig;
+import dev.creoii.bulletforge.render.screen.AbstractScreen;
 import dev.creoii.bulletforge.render.screen.EditorScreen;
 import dev.creoii.bulletforge.render.screen.element.OptionTooltip;
 import dev.creoii.bulletforge.render.screen.element.Tab;
@@ -15,6 +21,10 @@ import dev.creoii.bulletforge.render.screen.element.tooltip.TooltipProvider;
 import games.spooky.gdx.nativefilechooser.NativeFileChooserCallback;
 import games.spooky.gdx.nativefilechooser.NativeFileChooserIntent;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 
 public class FileButton extends TextButton implements TooltipProvider, OptionProvider {
@@ -46,7 +56,7 @@ public class FileButton extends TextButton implements TooltipProvider, OptionPro
         newButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                main.getUserInterface().getTabManager().addTab(-1, new Tab(main, "Editor", new EditorScreen(main)));
+                main.getUserInterface().getTabManager().addTab(-1, Tab.createEditor(main, "New Pattern", new EditorScreen(main)));
             }
         });
         TextButton openButton = new TextButton("Open", GlobalAssets.SKIN);
@@ -58,11 +68,23 @@ public class FileButton extends TextButton implements TooltipProvider, OptionPro
                     @Override
                     public void onFileChosen(FileHandle file) {
                         if (!file.extension().equals("json")) {
-                            System.out.println("fail: " + file.name());
                             return;
                         }
 
-                        System.out.println("success: " + file.name());
+                        try {
+                            JsonElement jsonValue = BulletForge.GSON.fromJson(new FileReader(file.file()), JsonElement.class);
+                            DataResult<EditorConfig> result = EditorConfig.CODEC.parse(JsonOps.INSTANCE, jsonValue);
+
+                            if (result.isSuccess()) {
+                                EditorConfig config = result.getOrThrow();
+
+                                EditorScreen editorScreen = new EditorScreen(main);
+                                editorScreen.getConfig().set(config);
+                                main.getUserInterface().getTabManager().addTab(-1, Tab.createEditor(main, file.nameWithoutExtension(), editorScreen));
+                            }
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     @Override
@@ -84,12 +106,25 @@ public class FileButton extends TextButton implements TooltipProvider, OptionPro
                 main.getFileChooser().chooseFile(main.getFileChooserConfiguration(), new NativeFileChooserCallback() {
                     @Override
                     public void onFileChosen(FileHandle file) {
-                        if (!file.extension().equals("json")) {
-                            System.out.println("fail: " + file.name());
-                            return;
-                        }
+                        AbstractScreen screen = main.getUserInterface().getActiveScreen();
+                        if (screen instanceof EditorScreen editorScreen) {
+                            String path = file.path();
+                            if (!file.extension().equalsIgnoreCase("json")) {
+                                path += ".json";
+                                file = Gdx.files.absolute(path);
+                            }
 
-                        System.out.println("success: " + file.name());
+                            try {
+                                EditorConfig config = editorScreen.getConfig();
+                                JsonElement jsonValue = EditorConfig.CODEC.encodeStart(JsonOps.INSTANCE, config).getOrThrow();
+
+                                try (FileWriter writer = new FileWriter(file.file())) {
+                                    BulletForge.GSON.toJson(jsonValue, writer);
+                                }
+                            } catch (IOException | RuntimeException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
 
                     @Override
@@ -103,10 +138,6 @@ public class FileButton extends TextButton implements TooltipProvider, OptionPro
                 });
             }
         });
-        return List.of(
-            newButton,
-            openButton,
-            saveButton
-        );
+        return List.of(newButton, openButton, saveButton);
     }
 }

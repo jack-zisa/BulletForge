@@ -10,8 +10,8 @@ public class EditorPane extends Table {
         top().left();
         defaults().growX().top();
 
-        Table attackTable = EditorGenerator.createEditorTable(parent.getAttack(), GlobalAssets.SKIN);
-        Table bulletTable = EditorGenerator.createEditorTable(parent.getBullet(), GlobalAssets.SKIN);
+        Table attackTable = EditorGenerator.createEditorTable(parent.getConfig().attack(), GlobalAssets.SKIN);
+        Table bulletTable = EditorGenerator.createEditorTable(parent.getConfig().bullet(), GlobalAssets.SKIN);
 
         add(attackTable).growX().row();
         add(bulletTable).growX().row();

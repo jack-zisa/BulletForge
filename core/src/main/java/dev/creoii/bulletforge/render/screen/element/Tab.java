@@ -12,13 +12,15 @@ import dev.creoii.bulletforge.GlobalAssets;
 import dev.creoii.bulletforge.render.screen.AbstractScreen;
 
 public class Tab extends Table {
+    private final Type type;
     private final String title;
     private final AbstractScreen screen;
     private final Label titleLabel;
     private int index;
     private boolean selected;
 
-    public Tab(BulletForge main, String title, AbstractScreen screen) {
+    protected Tab(BulletForge main, Type type, String title, AbstractScreen screen) {
+        this.type = type;
         this.title = title;
         this.screen = screen;
         index = -1;
@@ -31,7 +33,7 @@ public class Tab extends Table {
                 main.getUserInterface().getTabManager().removeTab(index);
             }
         });
-        add(titleLabel = new Label(title, GlobalAssets.SKIN));
+        add(titleLabel = new Label(getTitle(), GlobalAssets.SKIN));
         add(closeButton);
 
         addListener(new ClickListener() {
@@ -43,7 +45,22 @@ public class Tab extends Table {
         });
     }
 
+    public static Tab createHome(BulletForge main, AbstractScreen screen) {
+        return new Tab(main, Type.HOME, "", screen);
+    }
+
+    public static Tab createEditor(BulletForge main, String title, AbstractScreen screen) {
+        return new Tab(main, Type.EDITOR, title, screen);
+    }
+
+    public Type getType() {
+        return type;
+    }
+
     public String getTitle() {
+        if (type == Type.HOME) {
+            return "Home";
+        }
         return title;
     }
 
@@ -65,5 +82,10 @@ public class Tab extends Table {
 
     public boolean isSelected() {
         return selected;
+    }
+
+    public enum Type {
+        HOME,
+        EDITOR
     }
 }

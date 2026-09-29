@@ -28,7 +28,6 @@ public class TabManager extends Table {
     public void removeTab(int i) {
         Tab removed = (Tab) removeActorAt(i, true);
         if (removed != null) {
-            removed.setIndex(-1);
             updateIndexes();
 
             if (selectedTabIndex >= getChildren().size) {
@@ -56,7 +55,7 @@ public class TabManager extends Table {
         Tab tab = (Tab) getChild(i);
         if (tab != null) {
             int index = i + 1;
-            Tab newTab = new Tab(main, tab.getTitle(), tab.getScreen());
+            Tab newTab = Tab.createEditor(main, tab.getTitle(), tab.getScreen());
             addTab(index, newTab);
         }
     }

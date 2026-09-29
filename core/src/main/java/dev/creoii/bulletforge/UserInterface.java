@@ -76,7 +76,7 @@ public class UserInterface {
         root.add(autofireButton = new AutofireButton(main)).left().row();
         root.add(screenContainer = new Container<>()).grow().fill().row();
 
-        tabManager.addTab(-1, new Tab(main, "Home", new HomeScreen(main)));
+        tabManager.addTab(-1, Tab.createHome(main, new HomeScreen(main)));
 
         main.getGlobalStage().addActor(root);
 

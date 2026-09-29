@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import dev.creoii.bulletforge.render.DebugRenderer;
 import dev.creoii.bulletforge.util.localization.I18n;
 import games.spooky.gdx.nativefilechooser.NativeFileChooser;
@@ -18,6 +20,7 @@ import java.nio.file.Paths;
 import java.util.Locale;
 
 public class BulletForge extends Game {
+    public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private final String windowTitle;
     private OrthographicCamera camera;
     private Stage globalStage;

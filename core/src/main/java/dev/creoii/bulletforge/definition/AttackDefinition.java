@@ -10,10 +10,10 @@ public final class AttackDefinition {
     public static final AttackDefinition DEFAULT = new AttackDefinition(100, 1, 0f, 0f);
     public static final Codec<AttackDefinition> CODEC = RecordCodecBuilder.create(instance -> {
         return instance.group(
-            Codec.INT.optionalFieldOf("attack_speed", 100).forGetter(AttackDefinition::attackSpeed),
-            Codec.INT.optionalFieldOf("bullet_count", 1).forGetter(AttackDefinition::bulletCount),
-            Codec.FLOAT.optionalFieldOf("arc_gap", 0f).forGetter(AttackDefinition::arcGap),
-            Codec.FLOAT.optionalFieldOf("angle_offset", 0f).forGetter(AttackDefinition::angleOffset)
+            Codec.INT.fieldOf("attack_speed").forGetter(AttackDefinition::attackSpeed),
+            Codec.INT.fieldOf("bullet_count").forGetter(AttackDefinition::bulletCount),
+            Codec.FLOAT.fieldOf("arc_gap").forGetter(AttackDefinition::arcGap),
+            Codec.FLOAT.fieldOf("angle_offset").forGetter(AttackDefinition::angleOffset)
         ).apply(instance, AttackDefinition::new);
     });
     @EditorSerializable

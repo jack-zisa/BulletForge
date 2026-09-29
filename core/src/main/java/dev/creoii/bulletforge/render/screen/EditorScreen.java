@@ -5,9 +5,7 @@ import dev.creoii.bulletforge.BulletForge;
 import dev.creoii.bulletforge.GlobalAssets;
 import dev.creoii.bulletforge.attack.AttackManager;
 import dev.creoii.bulletforge.bullet.BulletManager;
-import dev.creoii.bulletforge.definition.AttackDefinition;
-import dev.creoii.bulletforge.definition.BulletDefinition;
-import dev.creoii.bulletforge.definition.DisplayDefinition;
+import dev.creoii.bulletforge.editor.EditorConfig;
 import dev.creoii.bulletforge.render.screen.element.editor.EditorPane;
 
 public class EditorScreen extends AbstractScreen {
@@ -16,10 +14,7 @@ public class EditorScreen extends AbstractScreen {
     private final AttackManager attackManager;
     private final BulletManager bulletManager;
     private final EditorPane editorPane;
-
-    private final AttackDefinition attack;
-    private final BulletDefinition bullet;
-    private final DisplayDefinition display;
+    private final EditorConfig config;
 
     public EditorScreen(BulletForge main) {
         super(main);
@@ -27,9 +22,7 @@ public class EditorScreen extends AbstractScreen {
         attackManager = new AttackManager(main, this);
         bulletManager = new BulletManager(main, this);
 
-        attack = AttackDefinition.DEFAULT.copy();
-        bullet = BulletDefinition.DEFAULT.copy();
-        display = DisplayDefinition.DEFAULT.copy();
+        config = new EditorConfig();
 
         getRoot().setFillParent(true);
         getRoot().top().right();
@@ -76,15 +69,7 @@ public class EditorScreen extends AbstractScreen {
         return editorPane;
     }
 
-    public AttackDefinition getAttack() {
-        return attack;
-    }
-
-    public BulletDefinition getBullet() {
-        return bullet;
-    }
-
-    public DisplayDefinition getDisplay() {
-        return display;
+    public EditorConfig getConfig() {
+        return config;
     }
 }

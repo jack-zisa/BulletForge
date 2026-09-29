@@ -81,7 +81,7 @@ public class AttackManager implements InputProcessor, Tickable {
     @Override
     public void tick(float dt) {
         if (autofire || attacking) {
-            AttackDefinition attack = parent.getAttack();
+            AttackDefinition attack = parent.getConfig().attack();
 
             attackTime -= dt;
 
@@ -108,7 +108,7 @@ public class AttackManager implements InputProcessor, Tickable {
                     float rotatedY = mouseDir.y * cos + mouseDir.x * sin;
 
                     Bullet bullet = parent.getBulletManager().getBulletPool().obtain();
-                    bullet.set(parent.getBullet());
+                    bullet.set(parent.getConfig().bullet());
                     bullet.spawn(x, y, rotatedX, rotatedY);
                     parent.getBulletManager().addBullet(bullet);
                 }
