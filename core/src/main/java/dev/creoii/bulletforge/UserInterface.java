@@ -4,6 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import dev.creoii.bulletforge.render.screen.AbstractScreen;
 import dev.creoii.bulletforge.render.screen.HomeScreen;
 import dev.creoii.bulletforge.render.screen.element.tooltip.TooltipProvider;
 import dev.creoii.bulletforge.render.window.Tab;
@@ -19,6 +20,7 @@ public class UserInterface {
     private TabManager tabManager;
     private WindowControlBar windowControlBar;
     private Container<Table> screenContainer;
+    private AbstractScreen activeScreen;
 
     public UserInterface(BulletForge main) {
         this.main = main;
@@ -34,6 +36,25 @@ public class UserInterface {
 
     public Container<Table> getScreenContainer() {
         return screenContainer;
+    }
+
+    public void render(float dt) {
+        if (activeScreen != null) {
+            activeScreen.render(dt);
+        }
+    }
+
+    public void setActiveScreen(AbstractScreen screen) {
+        if (activeScreen != null) {
+            activeScreen.hide();
+        }
+
+        activeScreen = screen;
+
+        if (activeScreen != null) {
+            screenContainer.setActor(activeScreen.getRoot());
+            activeScreen.show();
+        }
     }
 
     protected void createGlobalActors() {

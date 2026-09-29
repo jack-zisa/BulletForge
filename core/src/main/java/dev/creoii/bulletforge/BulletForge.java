@@ -22,6 +22,7 @@ public class BulletForge extends Game {
     private final DebugRenderer debugRenderer;
     private final I18n i18n;
     private final UserInterface userInterface;
+    private long time;
     private boolean debug;
 
     public BulletForge(String windowTitle) {
@@ -58,14 +59,16 @@ public class BulletForge extends Game {
     public void render() {
         ScreenUtils.clear(Color.BLACK);
 
-        super.render();
-
         float dt = Gdx.graphics.getDeltaTime();
+
+        userInterface.render(dt);
 
         if (debug) debugRenderer.render(dt);
 
         globalStage.act(dt);
         globalStage.draw();
+
+        ++time;
     }
 
     @Override
@@ -100,6 +103,10 @@ public class BulletForge extends Game {
 
     public UserInterface getUserInterface() {
         return userInterface;
+    }
+
+    public long getTime() {
+        return time;
     }
 
     public void toggleDebug() {

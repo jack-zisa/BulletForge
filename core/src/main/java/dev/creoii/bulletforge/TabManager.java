@@ -80,6 +80,6 @@ public class TabManager extends Table {
         }
 
         main.getUserInterface().getScreenContainer().clearChildren();
-        main.getUserInterface().getScreenContainer().setActor(((Tab) getChild(i)).getScreen().getRoot());
+        main.getUserInterface().setActiveScreen(((Tab) getChild(i)).getScreen());
     }
 }

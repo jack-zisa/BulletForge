@@ -15,6 +15,8 @@ public final class GlobalAssets {
     public static final Texture MINIMIZE_ICON = new Texture(Gdx.files.internal("sprites/ui/minimize.png"));
     public static final Texture MAXIMIZE_ICON = new Texture(Gdx.files.internal("sprites/ui/maximize.png"));
 
+    public static final Texture DEFAULT_BULLET = new Texture(Gdx.files.internal("sprites/default_bullet.png"));
+
     public static void dispose() {
         SKIN.dispose();
         BORDER_SHADER.dispose();
