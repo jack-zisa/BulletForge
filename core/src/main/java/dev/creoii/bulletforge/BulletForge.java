@@ -65,6 +65,8 @@ public class BulletForge extends Game {
 
     @Override
     public void resize(int width, int height) {
+        camera.viewportWidth = width;
+        camera.viewportHeight = height;
         camera.update();
         globalStage.getViewport().update(width, height, true);
     }

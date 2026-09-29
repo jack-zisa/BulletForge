@@ -85,13 +85,8 @@ public class InputHandler extends InputAdapter {
 
     public void updateZoom(float amountY) {
         int index = Arrays.binarySearch(ZOOM_LEVELS, zoom);
-        if (index < 0)
-            index = -index - 1;
 
-        if (amountY > .25f && index < ZOOM_LEVELS.length - 1) {
-            zoom = ZOOM_LEVELS[index + 1];
-        } else if (amountY < -.25f && index > 0) {
-            zoom = ZOOM_LEVELS[index - 1];
-        }
+        if (amountY > 0f && index < ZOOM_LEVELS.length - 1) zoom = ZOOM_LEVELS[index + 1];
+        else if (amountY < 0f && index > 0) zoom = ZOOM_LEVELS[index - 1];
     }
 }
