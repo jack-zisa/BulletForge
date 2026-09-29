@@ -36,6 +36,7 @@ dependencies {
   implementation "com.github.crykn.guacamole:gdx-desktop:$guacamoleVersion"
   implementation project(':core')
   implementation("com.badlogicgames.gdx:gdx-tools:$gdxVersion"){exclude group: 'com.badlogicgames.gdx', module: 'gdx-backend-lwjgl'}
+  implementation "games.spooky.gdx:gdx-nativefilechooser-desktop-lwjgl:2.4.0"
 
   if(enableGraalNative == 'true') {
     implementation "io.github.berstanio:gdx-svmhelper-backend-lwjgl3:$graalHelperVersion"

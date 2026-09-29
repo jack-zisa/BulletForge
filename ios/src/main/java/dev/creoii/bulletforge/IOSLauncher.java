@@ -12,7 +12,7 @@ public class IOSLauncher extends IOSApplication.Delegate {
     @Override
     protected IOSApplication createApplication() {
         IOSApplicationConfiguration configuration = new IOSApplicationConfiguration();
-        return new IOSApplication(new BulletForge(), configuration);
+        return new IOSApplication(new BulletForge("BulletForge", null), configuration);
     }
 
     public static void main(String[] argv) {

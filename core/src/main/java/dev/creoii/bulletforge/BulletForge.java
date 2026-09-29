@@ -3,6 +3,7 @@ package dev.creoii.bulletforge;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -10,7 +11,10 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import dev.creoii.bulletforge.render.DebugRenderer;
 import dev.creoii.bulletforge.util.localization.I18n;
+import games.spooky.gdx.nativefilechooser.NativeFileChooser;
+import games.spooky.gdx.nativefilechooser.NativeFileChooserConfiguration;
 
+import java.nio.file.Paths;
 import java.util.Locale;
 
 public class BulletForge extends Game {
@@ -22,16 +26,20 @@ public class BulletForge extends Game {
     private final DebugRenderer debugRenderer;
     private final I18n i18n;
     private final UserInterface userInterface;
+    private final NativeFileChooser fileChooser;
+    private final NativeFileChooserConfiguration fileChooserConfiguration;
     private long time;
     private boolean debug;
 
-    public BulletForge(String windowTitle) {
+    public BulletForge(String windowTitle, NativeFileChooser fileChooser) {
         this.windowTitle = windowTitle;
+        this.fileChooser = fileChooser;
         input = new InputMultiplexer();
         input.addProcessor(inputHandler = new InputHandler(this));
         debugRenderer = new DebugRenderer(this);
         i18n = new I18n(Locale.ENGLISH);
         userInterface = new UserInterface(this);
+        fileChooserConfiguration = new NativeFileChooserConfiguration();
     }
 
     @Override
@@ -41,6 +49,9 @@ public class BulletForge extends Game {
 
         globalStage = new Stage(new ScreenViewport());
         userInterface.createGlobalActors();
+
+        fileChooserConfiguration.directory = new FileHandle(Paths.get(System.getProperty("user.home"), "Documents").toFile());
+        fileChooserConfiguration.nameFilter = (_, name) -> name.endsWith(".json");
 
         input.addProcessor(globalStage);
 
@@ -103,6 +114,14 @@ public class BulletForge extends Game {
 
     public UserInterface getUserInterface() {
         return userInterface;
+    }
+
+    public NativeFileChooser getFileChooser() {
+        return fileChooser;
+    }
+
+    public NativeFileChooserConfiguration getFileChooserConfiguration() {
+        return fileChooserConfiguration;
     }
 
     public long getTime() {
