@@ -2,14 +2,14 @@ package dev.creoii.bulletforge.attack;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import dev.creoii.bulletforge.BulletForge;
-import dev.creoii.bulletforge.bullet.Bullet;
-import dev.creoii.bulletforge.definition.AttackDefinition;
+import dev.creoii.bulletforge.object.definition.AttackDefinition;
+import dev.creoii.bulletforge.object.instance.AttackInstance;
 import dev.creoii.bulletforge.render.screen.EditorScreen;
 import dev.creoii.bulletforge.util.Tickable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AttackManager implements InputProcessor, Tickable {
     private final BulletForge main;
@@ -17,13 +17,18 @@ public class AttackManager implements InputProcessor, Tickable {
     private boolean autofire;
     private boolean targetMouse;
     private boolean attacking;
-    private float attackTime;
+    private final List<AttackInstance> attacks;
 
     public AttackManager(BulletForge main, EditorScreen parent) {
         this.main = main;
         this.parent = parent;
         autofire = true;
         targetMouse = true;
+        attacks = new ArrayList<>();
+
+        parent.getConfig().attacks().forEach(attackDefinition -> {
+            attacks.add(new AttackInstance(this, attackDefinition));
+        });
     }
 
     @Override
@@ -82,40 +87,23 @@ public class AttackManager implements InputProcessor, Tickable {
 
     @Override
     public void tick(float dt) {
-        if (autofire || attacking) {
-            AttackDefinition attack = parent.getConfig().attack();
+        if (!autofire && !attacking) {
+            return;
+        }
 
-            attackTime -= dt;
+        attacks.forEach(attackDefinition -> attackDefinition.tick(dt));
+    }
 
-            if (attackTime <= 0f) {
-                attackTime += attack.attackSpeed() / 1000f;
+    public void addAttack(AttackDefinition attack) {
+        attacks.add(new AttackInstance(this, attack));
+    }
 
-                float baseAngle = -attack.arcGap() * (attack.bulletCount() - 1) / 2f;
+    public BulletForge getMain() {
+        return main;
+    }
 
-                Vector3 center = main.getInputHandler().getCenterPos();
-                Vector3 mouseDir = targetMouse ? main.getInputHandler().getDirectionToMouse(center) : Vector3.X;
-
-                Vector2 up = new Vector2(-mouseDir.y, mouseDir.x);
-                float x = center.x + mouseDir.x * up.x;
-                float y = center.y + mouseDir.y * up.y;
-
-                for (int i = 0; i < attack.bulletCount(); ++i) {
-                    float angle = (baseAngle + i * attack.arcGap()) + attack.angleOffset();
-
-                    float radians = angle * MathUtils.degreesToRadians;
-                    float cos = MathUtils.cos(radians);
-                    float sin = MathUtils.sin(radians);
-
-                    float rotatedX = mouseDir.x * cos - mouseDir.y * sin;
-                    float rotatedY = mouseDir.y * cos + mouseDir.x * sin;
-
-                    Bullet bullet = parent.getBulletManager().getBulletPool().obtain();
-                    bullet.set(parent.getConfig().bullet());
-                    bullet.spawn(x, y, rotatedX, rotatedY);
-                    parent.getBulletManager().addBullet(bullet);
-                }
-            }
-        } else attackTime += dt;
+    public EditorScreen getParent() {
+        return parent;
     }
 
     public boolean isAutofire() {

@@ -1,4 +1,4 @@
-package dev.creoii.bulletforge.definition;
+package dev.creoii.bulletforge.object.definition;
 
 import com.badlogic.gdx.math.Vector2;
 import com.mojang.datafixers.util.Either;

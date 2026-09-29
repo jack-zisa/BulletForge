@@ -1,17 +1,17 @@
-package dev.creoii.bulletforge.bullet;
+package dev.creoii.bulletforge.object.instance;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool;
 import dev.creoii.bulletforge.GlobalAssets;
-import dev.creoii.bulletforge.definition.BulletDefinition;
+import dev.creoii.bulletforge.object.definition.BulletDefinition;
 import dev.creoii.bulletforge.render.Renderable;
 import dev.creoii.bulletforge.util.Tickable;
 import dev.creoii.bulletforge.util.provider.BulletForgeValueTypes;
 import dev.creoii.providerlib.api.context.Context;
 import dev.creoii.providerlib.api.context.ContextProvider;
 
-public class Bullet implements Tickable, Renderable, Pool.Poolable, ContextProvider {
+public class BulletInstance implements Tickable, Renderable, Pool.Poolable, ContextProvider {
     private final Context context;
     private BulletDefinition definition;
     private long id;
@@ -20,7 +20,7 @@ public class Bullet implements Tickable, Renderable, Pool.Poolable, ContextProvi
     private final Vector2 direction;
     private boolean dead;
 
-    public Bullet() {
+    public BulletInstance() {
         context = new Context();
         pos = new Vector2();
         direction = new Vector2();

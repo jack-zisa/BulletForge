@@ -3,6 +3,7 @@ package dev.creoii.bulletforge.bullet;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.utils.Pool;
 import dev.creoii.bulletforge.BulletForge;
+import dev.creoii.bulletforge.object.instance.BulletInstance;
 import dev.creoii.bulletforge.render.Renderable;
 import dev.creoii.bulletforge.render.screen.EditorScreen;
 import dev.creoii.bulletforge.util.Tickable;
@@ -13,13 +14,13 @@ import java.util.function.Consumer;
 public class BulletManager implements Tickable, Renderable {
     private final BulletForge main;
     private final EditorScreen parent;
-    private final Pool<Bullet> bulletPool = new Pool<>() {
+    private final Pool<BulletInstance> bulletPool = new Pool<>() {
         @Override
-        protected Bullet newObject() {
-            return new Bullet();
+        protected BulletInstance newObject() {
+            return new BulletInstance();
         }
     };
-    private final Map<Long, Bullet> bullets;
+    private final Map<Long, BulletInstance> bullets;
     private final Set<Long> toRemove;
     private final PriorityQueue<Long> ids;
     private long nextId;
@@ -50,23 +51,23 @@ public class BulletManager implements Tickable, Renderable {
         forEach(bullet -> bullet.render(batch));
     }
 
-    public Pool<Bullet> getBulletPool() {
+    public Pool<BulletInstance> getBulletPool() {
         return bulletPool;
     }
 
-    public void addBullet(Bullet bullet) {
+    public void addBullet(BulletInstance bullet) {
         long id = ids.isEmpty() ? nextId++ : ids.poll();
         bullet.init(id);
         bullets.put(id, bullet);
     }
 
-    public void addBullet(long id, Bullet bullet) {
+    public void addBullet(long id, BulletInstance bullet) {
         bullets.put(id, bullet);
         nextId = Math.max(nextId, id + 1);
     }
 
     public void removeBullet(long id) {
-        Bullet removed;
+        BulletInstance removed;
         if ((removed = bullets.remove(id)) != null) {
             bulletPool.free(removed);
             ids.add(id);
@@ -79,7 +80,7 @@ public class BulletManager implements Tickable, Renderable {
         nextId = 0L;
     }
 
-    public void forEach(Consumer<Bullet> action) {
+    public void forEach(Consumer<BulletInstance> action) {
         bullets.values().forEach(action);
     }
 

@@ -5,7 +5,6 @@ import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector3;
-import dev.creoii.bulletforge.render.screen.EditorScreen;
 
 import java.util.Arrays;
 
@@ -68,7 +67,7 @@ public class InputHandler extends InputAdapter {
     }
 
     public Vector3 getCenterPos() {
-        int width = Gdx.graphics.getWidth() - (int) EditorScreen.EDITOR_PANE_WIDTH;
+        int width = Gdx.graphics.getWidth();
         int height = Gdx.graphics.getHeight() + ((int) UserInterface.CONTROL_BAR_HEIGHT + (int) UserInterface.TAB_BAR_HEIGHT);
         centerPos.set(width / 2f, height / 2f, 0f);
         main.getCamera().unproject(centerPos);

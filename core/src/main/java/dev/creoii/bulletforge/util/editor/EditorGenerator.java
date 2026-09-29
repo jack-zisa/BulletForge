@@ -2,14 +2,140 @@ package dev.creoii.bulletforge.util.editor;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.Field;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
+import dev.creoii.bulletforge.object.definition.AttackDefinition;
+import dev.creoii.bulletforge.object.definition.BulletDefinition;
+import dev.creoii.bulletforge.object.definition.BulletDictionaryDefinition;
+import dev.creoii.bulletforge.render.screen.EditorScreen;
 import dev.creoii.bulletforge.render.screen.element.editor.ExpandableEditorPane;
 
-public class EditorGenerator {
+import java.util.List;
+
+public final class EditorGenerator {
+    public static Table createBulletDictionaryEditor(BulletDictionaryDefinition dictionary, Skin skin) {
+        Table root = new Table();
+        root.top().left();
+        root.defaults().growX().left().pad(2f);
+
+        Label title = new Label("Bullets", skin);
+        root.add(title).row();
+
+        Table entries = new Table();
+        entries.top().left();
+        entries.defaults().growX().left().pad(2f);
+
+        rebuildBulletEntries(entries, dictionary, skin);
+
+        TextButton addButton = new TextButton("Add Bullet", skin);
+        addButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                dictionary.addBullet(BulletDefinition.DEFAULT.copy());
+                rebuildBulletEntries(entries, dictionary, skin);
+            }
+        });
+
+        root.add(entries).growX().top().left().row();
+        root.add(addButton).left().row();
+
+        return root;
+    }
+
+    private static void rebuildBulletEntries(Table entries, BulletDictionaryDefinition dictionary, Skin skin) {
+        entries.clearChildren();
+
+        dictionary.forEach((id, bullet) -> {
+            ExpandableEditorPane pane =
+                new ExpandableEditorPane(
+                    "Bullet " + id,
+                    bullet,
+                    skin
+                );
+
+            TextButton removeButton = new TextButton("X", skin);
+            removeButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    dictionary.removeBullet(id);
+                    rebuildBulletEntries(entries, dictionary, skin);
+                }
+            });
+
+            Table row = new Table();
+            row.add(pane).growX().left();
+            row.add(removeButton).width(30f);
+
+            entries.add(row).growX().left().row();
+        });
+    }
+
+    public static Table createAttackListEditor(EditorScreen screen, List<AttackDefinition> attacks, Skin skin) {
+        Table root = new Table();
+        root.top().left();
+        root.defaults().growX().left().pad(2f);
+
+        root.add(new Label("Attacks", skin)).row();
+
+        Table entries = new Table();
+        entries.top().left();
+        entries.defaults().growX().left().pad(2f);
+
+        rebuildAttackEntries(entries, attacks, skin);
+
+        TextButton addButton = new TextButton("Add Attack", skin);
+        addButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                AttackDefinition copy = AttackDefinition.DEFAULT.copy();
+                attacks.add(copy);
+                screen.getAttackManager().addAttack(copy);
+                rebuildAttackEntries(entries, attacks, skin);
+            }
+        });
+
+        root.add(entries).growX().top().left().row();
+        root.add(addButton).left().row();
+
+        return root;
+    }
+
+    private static void rebuildAttackEntries(Table entries, List<AttackDefinition> attacks, Skin skin) {
+        entries.clearChildren();
+
+        for (int i = 0; i < attacks.size(); i++) {
+            int index = i;
+            AttackDefinition attack = attacks.get(i);
+
+            ExpandableEditorPane pane =
+                new ExpandableEditorPane(
+                    "Attack " + index,
+                    attack,
+                    skin
+                );
+
+            TextButton removeButton = new TextButton("X", skin);
+            removeButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    attacks.remove(index);
+                    rebuildAttackEntries(entries, attacks, skin);
+                }
+            });
+
+            Table row = new Table();
+            row.add(pane).growX().left();
+            row.add(removeButton).width(30f);
+
+            entries.add(row).growX().left().row();
+        }
+    }
+
     public static Table createEditorTable(Object target, Skin skin) {
         Table rootTable = new Table();
 

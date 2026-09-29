@@ -1,4 +1,4 @@
-package dev.creoii.bulletforge.definition;
+package dev.creoii.bulletforge.object.definition;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
