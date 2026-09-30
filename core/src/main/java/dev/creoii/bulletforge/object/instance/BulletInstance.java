@@ -49,7 +49,17 @@ public class BulletInstance implements Tickable, Renderable, Pool.Poolable, Cont
     @Override
     public void render(Batch batch) {
         float scale = definition.display().scale();
-        batch.draw(GlobalAssets.DEFAULT_BULLET, pos.x - (scale / 2f), pos.y - (scale / 2f), scale, scale);
+        float rotation = definition.rotation() * age;
+        batch.draw(GlobalAssets.DEFAULT_BULLET,
+            pos.x - (scale / 2f), pos.y - (scale / 2f),
+            scale / 2f, scale / 2f,
+            scale, scale,
+            1f, 1f,
+            rotation,
+            0, 0,
+            GlobalAssets.DEFAULT_BULLET.getWidth(), GlobalAssets.DEFAULT_BULLET.getHeight(),
+            false, false
+        );
     }
 
     @Override
