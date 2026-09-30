@@ -35,6 +35,10 @@ public final class BulletDictionaryDefinition {
         dictionary = new LinkedHashMap<>();
     }
 
+    public BulletDictionaryDefinition copy() {
+        return new BulletDictionaryDefinition(dictionary);
+    }
+
     public Map<Integer, BulletDefinition> get() {
         return dictionary;
     }

@@ -23,7 +23,7 @@ public class AttackManager implements InputProcessor, Tickable {
         this.main = main;
         this.parent = parent;
         autofire = true;
-        targetMouse = true;
+        targetMouse = false;
         attacks = new ArrayList<>();
 
         parent.getConfig().attacks().forEach(attackDefinition -> {

@@ -17,7 +17,7 @@ public record EditorConfig(List<AttackDefinition> attacks, BulletDictionaryDefin
     });
 
     public EditorConfig() {
-        this(Lists.newArrayList(AttackDefinition.DEFAULT.copy()), BulletDictionaryDefinition.DEFAULT);
+        this(Lists.newArrayList(AttackDefinition.DEFAULT.copy()), BulletDictionaryDefinition.DEFAULT.copy());
     }
 
     public void set(EditorConfig config) {

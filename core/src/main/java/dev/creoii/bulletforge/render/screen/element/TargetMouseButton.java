@@ -11,7 +11,7 @@ import dev.creoii.bulletforge.render.screen.EditorScreen;
 public class TargetMouseButton extends Table {
     public TargetMouseButton(BulletForge main) {
         CheckBox checkBox = new CheckBox("Target Mouse", GlobalAssets.SKIN);
-        checkBox.setChecked(true);
+        checkBox.setChecked(false);
         checkBox.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

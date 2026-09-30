@@ -6,9 +6,11 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.Field;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
+import dev.creoii.bulletforge.GlobalAssets;
 import dev.creoii.bulletforge.object.definition.AttackDefinition;
 import dev.creoii.bulletforge.object.definition.BulletDefinition;
 import dev.creoii.bulletforge.object.definition.BulletDictionaryDefinition;
@@ -21,18 +23,18 @@ public final class EditorGenerator {
     public static Table createBulletDictionaryEditor(BulletDictionaryDefinition dictionary, Skin skin) {
         Table root = new Table();
         root.top().left();
-        root.defaults().growX().left().pad(2f);
+        root.defaults().growX().left();
 
-        Label title = new Label("Bullets", skin);
-        root.add(title).row();
+        Table header = new Table();
+        header.top().left();
+        header.add(new Label("Bullets", skin));
+        TextButton addButton = new TextButton("+", skin);
+        header.add(addButton).right();
 
         Table entries = new Table();
         entries.top().left();
-        entries.defaults().growX().left().pad(2f);
+        entries.defaults().growX().left();
 
-        rebuildBulletEntries(entries, dictionary, skin);
-
-        TextButton addButton = new TextButton("Add Bullet", skin);
         addButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -41,8 +43,10 @@ public final class EditorGenerator {
             }
         });
 
+        root.add(header).growX().row();
         root.add(entries).growX().top().left().row();
-        root.add(addButton).left().row();
+
+        rebuildBulletEntries(entries, dictionary, skin);
 
         return root;
     }
@@ -51,12 +55,20 @@ public final class EditorGenerator {
         entries.clearChildren();
 
         dictionary.forEach((id, bullet) -> {
-            ExpandableEditorPane pane =
-                new ExpandableEditorPane(
-                    "Bullet " + id,
-                    bullet,
-                    skin
-                );
+            ExpandableEditorPane pane = new ExpandableEditorPane(bullet, skin);
+
+            Table header = new Table();
+            Image button = new Image(new TextureRegionDrawable(GlobalAssets.DROPDOWN));
+            TextButton title = new TextButton("Bullet " + id, skin);
+            header.add(title).growX();
+            header.add(button);
+
+            header.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    pane.setExpanded(!pane.isExpanded());
+                    button.setDrawable(new TextureRegionDrawable(pane.isExpanded() ? GlobalAssets.DROPUP : GlobalAssets.DROPDOWN));}
+            });
 
             TextButton removeButton = new TextButton("X", skin);
             removeButton.addListener(new ClickListener() {
@@ -67,28 +79,31 @@ public final class EditorGenerator {
                 }
             });
 
-            Table row = new Table();
-            row.add(pane).growX().left();
-            row.add(removeButton).width(30f);
+            header.add(removeButton).width(30f).top().right().row();
 
-            entries.add(row).growX().left().row();
+            Table row = new Table();
+            row.add(header).growX().left().row();
+            row.add(pane).growX().left().colspan(2).row();
+
+            entries.add(row).growX().left().top().row();
         });
     }
 
     public static Table createAttackListEditor(EditorScreen screen, List<AttackDefinition> attacks, Skin skin) {
         Table root = new Table();
         root.top().left();
-        root.defaults().growX().left().pad(2f);
+        root.defaults().growX().left();
 
-        root.add(new Label("Attacks", skin)).row();
+        Table header = new Table();
+        header.top().left();
+        header.add(new Label("Attacks", skin));
+        TextButton addButton = new TextButton("+", skin);
+        header.add(addButton).right();
 
         Table entries = new Table();
         entries.top().left();
-        entries.defaults().growX().left().pad(2f);
+        entries.defaults().growX().left();
 
-        rebuildAttackEntries(entries, attacks, skin);
-
-        TextButton addButton = new TextButton("Add Attack", skin);
         addButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -99,8 +114,10 @@ public final class EditorGenerator {
             }
         });
 
+        root.add(header).growX().row();
         root.add(entries).growX().top().left().row();
-        root.add(addButton).left().row();
+
+        rebuildAttackEntries(entries, attacks, skin);
 
         return root;
     }
@@ -112,12 +129,21 @@ public final class EditorGenerator {
             int index = i;
             AttackDefinition attack = attacks.get(i);
 
-            ExpandableEditorPane pane =
-                new ExpandableEditorPane(
-                    "Attack " + index,
-                    attack,
-                    skin
-                );
+            ExpandableEditorPane pane = new ExpandableEditorPane(attack, skin);
+
+            Table header = new Table();
+            Image button = new Image(new TextureRegionDrawable(GlobalAssets.DROPDOWN));
+            TextButton title = new TextButton("Attack " + index, skin);
+            header.add(title).growX();
+            header.add(button);
+
+            header.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    pane.setExpanded(!pane.isExpanded());
+                    button.setDrawable(new TextureRegionDrawable(pane.isExpanded() ? GlobalAssets.DROPUP : GlobalAssets.DROPDOWN));
+                }
+            });
 
             TextButton removeButton = new TextButton("X", skin);
             removeButton.addListener(new ClickListener() {
@@ -129,10 +155,10 @@ public final class EditorGenerator {
             });
 
             Table row = new Table();
-            row.add(pane).growX().left();
-            row.add(removeButton).width(30f);
+            row.add(header).growX().left().row();
+            row.add(pane).growX().left().colspan(2).row();
 
-            entries.add(row).growX().left().row();
+            entries.add(row).growX().left().top().row();
         }
     }
 
@@ -140,7 +166,6 @@ public final class EditorGenerator {
         Table rootTable = new Table();
 
         rootTable.top().right();
-        rootTable.defaults().pad(1f);
 
         Field[] fields = ClassReflection.getDeclaredFields(target.getClass());
 
@@ -158,8 +183,23 @@ public final class EditorGenerator {
 
                     Object value = field.get(target);
                     if (value != null) {
-                        rootTable.add(new ExpandableEditorPane(name, value, skin)).growX().colspan(2).row();
-                    } else rootTable.add();
+                        TextButton header = new TextButton(name, skin);
+                        ExpandableEditorPane pane = new ExpandableEditorPane(value, skin);
+
+                        header.addListener(new ClickListener() {
+                            @Override
+                            public void clicked(InputEvent event, float x, float y) {
+                                pane.setExpanded(!pane.isExpanded());
+                            }
+                        });
+
+                        rootTable.row();
+                        rootTable.add(header).growX().left().colspan(2).row();
+                        rootTable.add(pane).growX().left().colspan(2).row();
+                    } else {
+                        rootTable.row();
+                        rootTable.add();
+                    }
                 } catch (ReflectionException e) {
                     throw new RuntimeException("Error reading field: " + name, e);
                 }
@@ -205,7 +245,7 @@ public final class EditorGenerator {
                     } catch (ReflectionException e) { e.printStackTrace(); }
                 }
             });
-            table.add(textField).width(120);
+            table.add(textField).maxWidth(300f).colspan(2);
         } catch (ReflectionException e) {
             throw new RuntimeException("Error creating number input.");
         }
@@ -224,7 +264,7 @@ public final class EditorGenerator {
                     } catch (ReflectionException e) { e.printStackTrace(); }
                 }
             });
-            table.add(checkBox);
+            table.add(checkBox).maxWidth(300f).colspan(2);
         } catch (ReflectionException e) {
             throw new RuntimeException("Error creating boolean input.");
         }
@@ -242,7 +282,7 @@ public final class EditorGenerator {
                     } catch (ReflectionException e) { e.printStackTrace(); }
                 }
             });
-            table.add(textField).width(200);
+            table.add(textField).maxWidth(300f).colspan(2);
         } catch (ReflectionException e) {
             throw new RuntimeException("Error creating text input.");
         }
@@ -264,7 +304,7 @@ public final class EditorGenerator {
                     } catch (ReflectionException e) { e.printStackTrace(); }
                 }
             });
-            table.add(selectBox).width(150);
+            table.add(selectBox).maxWidth(300f).colspan(2);
         } catch (ReflectionException e) {
             throw new RuntimeException("Error creating enum input.");
         }
@@ -275,7 +315,6 @@ public final class EditorGenerator {
             Vector2 vector = (Vector2) field.get(target);
 
             Table vectorTable = new Table();
-            vectorTable.defaults().pad(1f);
 
             TextField xField = new TextField(String.valueOf(vector.x), skin);
             TextField yField = new TextField(String.valueOf(vector.y), skin);
@@ -302,9 +341,9 @@ public final class EditorGenerator {
             });
 
             vectorTable.add(new Label("X", skin));
-            vectorTable.add(xField).width(80f);
+            vectorTable.add(xField).width(75f);
             vectorTable.add(new Label("Y", skin));
-            vectorTable.add(yField).width(80f);
+            vectorTable.add(yField).width(75f);
 
             table.add(vectorTable).growX();
         } catch (ReflectionException e) {
