@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import dev.creoii.bulletforge.attack.AttackManager;
+import dev.creoii.bulletforge.attack.OffsetModifiers;
 import dev.creoii.bulletforge.object.definition.AttackDefinition;
 import dev.creoii.bulletforge.object.definition.BulletDefinition;
 
@@ -33,12 +34,27 @@ public class AttackInstance {
 
         float baseAngle = -definition.arcGap() * (definition.bulletCount() - 1) / 2f;
 
-        Vector3 center = manager.getMain().getInputHandler().getCenterPos();
-        Vector3 mouseDir = manager.shouldTargetMouse() ? manager.getMain().getInputHandler().getDirectionToMouse(center) : Vector3.X;
+        Vector3 origin = manager.getMain().getInputHandler().getCenterPos();
+        Vector3 mousePos = manager.getMain().getInputHandler().getMousePos();
 
-        Vector2 up = new Vector2(-mouseDir.y, mouseDir.x);
-        float x = center.x + mouseDir.x * up.x;
-        float y = center.y + mouseDir.y * up.y;
+        OffsetModifiers offsetModifiers = definition.offsetModifiers();
+        Vector2 offset = definition.offset();
+
+        Vector2 effectiveOffset = new Vector2(offset);
+
+        if (offsetModifiers.rotate()) {
+            Vector2 mouseDirection = new Vector2(mousePos.x - origin.x, mousePos.y - origin.y).nor();
+            float angle = MathUtils.atan2(mouseDirection.y, mouseDirection.x);
+            effectiveOffset.rotateRad(angle);
+        }
+
+        Vector3 spawnPos = new Vector3(origin).add(effectiveOffset.x, effectiveOffset.y, 0f);
+
+        if (offsetModifiers.affectMouse()) {
+            mousePos.add(effectiveOffset.x, effectiveOffset.y, 0f);
+        }
+
+        Vector3 mouseDir = manager.shouldTargetMouse() ? new Vector3(mousePos).sub(spawnPos).nor() : new Vector3(Vector3.X);
 
         for (int i = 0; i < definition.bulletCount(); ++i) {
             float angle = (baseAngle + i * definition.arcGap()) + definition.angleOffset();
@@ -52,7 +68,7 @@ public class AttackInstance {
 
             BulletInstance bullet = manager.getParent().getBulletManager().getBulletPool().obtain();
             bullet.set(bulletDefinition);
-            bullet.spawn(x, y, rotatedX, rotatedY);
+            bullet.spawn(spawnPos.x, spawnPos.y, rotatedX, rotatedY);
             manager.getParent().getBulletManager().addBullet(bullet);
         }
     }

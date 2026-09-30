@@ -1,20 +1,25 @@
 package dev.creoii.bulletforge.object.definition;
 
+import com.badlogic.gdx.math.Vector2;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.creoii.bulletforge.attack.OffsetModifiers;
+import dev.creoii.bulletforge.util.Codecs;
 import dev.creoii.bulletforge.util.editor.EditorSerializable;
 
 import java.util.Objects;
 
 public final class AttackDefinition {
-    public static final AttackDefinition DEFAULT = new AttackDefinition(0, 100, 1, 0f, 0f);
+    public static final AttackDefinition DEFAULT = new AttackDefinition(0, 100, 1, 0f, 0f, new Vector2(), OffsetModifiers.DEFAULT.copy());
     public static final Codec<AttackDefinition> CODEC = RecordCodecBuilder.create(instance -> {
         return instance.group(
             Codec.INT.fieldOf("bullet_id").forGetter(AttackDefinition::bulletId),
             Codec.INT.fieldOf("attack_speed").forGetter(AttackDefinition::attackSpeed),
             Codec.INT.fieldOf("bullet_count").forGetter(AttackDefinition::bulletCount),
             Codec.FLOAT.fieldOf("arc_gap").forGetter(AttackDefinition::arcGap),
-            Codec.FLOAT.fieldOf("angle_offset").forGetter(AttackDefinition::angleOffset)
+            Codec.FLOAT.fieldOf("angle_offset").forGetter(AttackDefinition::angleOffset),
+            Codecs.VECTOR2.fieldOf("offset").forGetter(AttackDefinition::offset),
+            OffsetModifiers.CODEC.fieldOf("offset_modifiers").forGetter(AttackDefinition::offsetModifiers)
         ).apply(instance, AttackDefinition::new);
     });
     @EditorSerializable
@@ -27,13 +32,23 @@ public final class AttackDefinition {
     private float arcGap;
     @EditorSerializable
     private float angleOffset;
+    @EditorSerializable
+    private final Vector2 offset;
+    @EditorSerializable
+    private final OffsetModifiers offsetModifiers;
 
-    public AttackDefinition(int bulletId, int attackSpeed, int bulletCount, float arcGap, float angleOffset) {
+    public AttackDefinition(int bulletId, int attackSpeed, int bulletCount, float arcGap, float angleOffset, Vector2 offset, OffsetModifiers offsetModifiers) {
         this.bulletId = bulletId;
         this.attackSpeed = attackSpeed;
         this.bulletCount = bulletCount;
         this.arcGap = arcGap;
         this.angleOffset = angleOffset;
+        this.offset = offset;
+        this.offsetModifiers = offsetModifiers;
+    }
+
+    public int bulletId() {
+        return bulletId;
     }
 
     public int attackSpeed() {
@@ -52,12 +67,16 @@ public final class AttackDefinition {
         return angleOffset;
     }
 
-    public int bulletId() {
-        return bulletId;
+    public Vector2 offset() {
+        return offset;
+    }
+
+    public OffsetModifiers offsetModifiers() {
+        return offsetModifiers;
     }
 
     public AttackDefinition copy() {
-        return new AttackDefinition(bulletId, attackSpeed, bulletCount, arcGap, angleOffset);
+        return new AttackDefinition(bulletId, attackSpeed, bulletCount, arcGap, angleOffset, offset.cpy(), offsetModifiers.copy());
     }
 
     public void set(AttackDefinition attack) {
@@ -66,23 +85,27 @@ public final class AttackDefinition {
         this.bulletCount = attack.bulletCount;
         this.arcGap = attack.arcGap;
         this.angleOffset = attack.angleOffset;
+        offset.set(attack.offset);
+        offsetModifiers.set(attack.offsetModifiers);
     }
 
     @Override
     public boolean equals(Object obj) {
         if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
+        if (obj == null || obj.getClass() != getClass()) return false;
         var that = (AttackDefinition) obj;
-        return this.bulletId == that.bulletId &&
-            this.attackSpeed == that.attackSpeed &&
-            this.bulletCount == that.bulletCount &&
-            Float.floatToIntBits(this.arcGap) == Float.floatToIntBits(that.arcGap) &&
-            Float.floatToIntBits(this.angleOffset) == Float.floatToIntBits(that.angleOffset);
+        return bulletId == that.bulletId &&
+            attackSpeed == that.attackSpeed &&
+            bulletCount == that.bulletCount &&
+            Float.floatToIntBits(arcGap) == Float.floatToIntBits(that.arcGap) &&
+            Float.floatToIntBits(angleOffset) == Float.floatToIntBits(that.angleOffset) &&
+            offset.equals(that.offset) &&
+            offsetModifiers.equals(that.offsetModifiers);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(bulletId, attackSpeed, bulletCount, arcGap, angleOffset);
+        return Objects.hash(bulletId, attackSpeed, bulletCount, arcGap, angleOffset, offset);
     }
 
     @Override
@@ -92,6 +115,8 @@ public final class AttackDefinition {
             "attackSpeed=" + attackSpeed + ", " +
             "bulletCount=" + bulletCount + ", " +
             "arcGap=" + arcGap + ", " +
-            "angleOffset=" + angleOffset + ']';
+            "angleOffset=" + angleOffset + ", " +
+            "offset=" + offset + ", " +
+            "offsetModifiers=" + offsetModifiers + ']';
     }
 }

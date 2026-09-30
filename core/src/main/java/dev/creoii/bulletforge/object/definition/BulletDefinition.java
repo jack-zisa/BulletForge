@@ -55,16 +55,8 @@ public final class BulletDefinition {
         return lifetime;
     }
 
-    public void setLifetime(float lifetime) {
-        this.lifetime = lifetime;
-    }
-
     public Vector2 velocity() {
         return velocity;
-    }
-
-    public void setVelocity(float x, float y) {
-        velocity.set(x, y);
     }
 
     public DisplayDefinition display() {

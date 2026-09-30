@@ -154,6 +154,8 @@ public final class EditorGenerator {
                 }
             });
 
+            header.add(removeButton).width(30f).top().right().row();
+
             Table row = new Table();
             row.add(header).growX().left().row();
             row.add(pane).growX().left().colspan(2).row();
@@ -177,7 +179,7 @@ public final class EditorGenerator {
             String name = field.getName();
             Class<?> type = field.getType();
 
-            if (type.getFields().length > 0 && type != Vector2.class && type != String.class) {
+            if (type.getFields().length > 0 && type != Vector2.class && type != String.class && !EditorOption.class.isAssignableFrom(type)) {
                 try {
                     rootTable.row();
 
@@ -206,7 +208,7 @@ public final class EditorGenerator {
                 continue;
             }
 
-            rootTable.add(new Label(name + ":", skin)).left();
+            if (!EditorOption.class.isAssignableFrom(type)) rootTable.add(new Label(name + ":", skin)).left();
 
             if (type == int.class || type == float.class || type == double.class) {
                 createNumberInput(rootTable, target, field, skin);
@@ -218,6 +220,13 @@ public final class EditorGenerator {
                 createEnumInput(rootTable, target, field, skin);
             } else if (type == Vector2.class) {
                 createVector2Input(rootTable, target, field, skin);
+            } else if (EditorOption.class.isAssignableFrom(type)) {
+                try {
+                    EditorOption option = (EditorOption) field.get(target);
+                    option.create(rootTable, target, field, skin);
+                } catch (ReflectionException e) {
+                    throw new RuntimeException("Error reading field: " + field.getName(), e);
+                }
             } else {
                 rootTable.add();
             }
