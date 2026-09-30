@@ -241,17 +241,21 @@ public final class EditorGenerator {
             String value = String.valueOf(field.get(target));
             TextField textField = new TextField(value, skin);
 
-            textField.setTextFieldFilter(new TextField.TextFieldFilter.DigitsOnlyFilter());
+            textField.setTextFieldFilter(field.getType() == int.class ? EditorUtils.DIGITS_ONLY_FILTER : EditorUtils.NumberFilter.INSTANCE);
             textField.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
                     try {
                         String text = textField.getText();
                         if (!text.isEmpty()) {
-                            if (field.getType() == int.class) field.set(target, Integer.parseInt(text));
+                            if (text.endsWith(".")) text = text.substring(0, text.length() - 1);
+
+                            if (field.getType() == int.class) field.set(target, (int) Float.parseFloat(text));
                             if (field.getType() == float.class) field.set(target, Float.parseFloat(text));
                         }
-                    } catch (ReflectionException e) { e.printStackTrace(); }
+                    } catch (ReflectionException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
             table.add(textField).maxWidth(300f).colspan(2);
@@ -270,7 +274,9 @@ public final class EditorGenerator {
                 public void changed(ChangeEvent event, Actor actor) {
                     try {
                         field.set(target, checkBox.isChecked());
-                    } catch (ReflectionException e) { e.printStackTrace(); }
+                    } catch (ReflectionException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
             table.add(checkBox).maxWidth(300f).colspan(2);
@@ -288,7 +294,9 @@ public final class EditorGenerator {
                 public void changed(ChangeEvent event, Actor actor) {
                     try {
                         field.set(target, textField.getText());
-                    } catch (ReflectionException e) { e.printStackTrace(); }
+                    } catch (ReflectionException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
             table.add(textField).maxWidth(300f).colspan(2);
@@ -310,7 +318,9 @@ public final class EditorGenerator {
                 public void changed(ChangeEvent event, Actor actor) {
                     try {
                         field.set(target, selectBox.getSelected());
-                    } catch (ReflectionException e) { e.printStackTrace(); }
+                    } catch (ReflectionException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
             table.add(selectBox).maxWidth(300f).colspan(2);
