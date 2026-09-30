@@ -62,6 +62,7 @@ public final class BulletDictionaryDefinition {
 
     public void clear() {
         dictionary.clear();
+        nextId = 0;
     }
 
     public Collection<BulletDefinition> values() {

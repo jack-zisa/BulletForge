@@ -76,8 +76,13 @@ public class BulletManager implements Tickable, Renderable {
 
     public void clearBullets() {
         bullets.clear();
+        toRemove.clear();
         ids.clear();
         nextId = 0L;
+    }
+
+    public void refresh() {
+        clearBullets();
     }
 
     public void forEach(Consumer<BulletInstance> action) {

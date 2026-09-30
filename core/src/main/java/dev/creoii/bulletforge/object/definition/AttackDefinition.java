@@ -14,12 +14,12 @@ public final class AttackDefinition {
     public static final Codec<AttackDefinition> CODEC = RecordCodecBuilder.create(instance -> {
         return instance.group(
             Codec.INT.fieldOf("bullet_id").forGetter(AttackDefinition::bulletId),
-            Codec.INT.fieldOf("attack_speed").forGetter(AttackDefinition::attackSpeed),
-            Codec.INT.fieldOf("bullet_count").forGetter(AttackDefinition::bulletCount),
-            Codec.FLOAT.fieldOf("arc_gap").forGetter(AttackDefinition::arcGap),
-            Codec.FLOAT.fieldOf("angle_offset").forGetter(AttackDefinition::angleOffset),
-            Codecs.VECTOR2.fieldOf("offset").forGetter(AttackDefinition::offset),
-            OffsetModifiers.CODEC.fieldOf("offset_modifiers").forGetter(AttackDefinition::offsetModifiers)
+            Codec.INT.optionalFieldOf("attack_speed", 100).forGetter(AttackDefinition::attackSpeed),
+            Codec.INT.optionalFieldOf("bullet_count", 1).forGetter(AttackDefinition::bulletCount),
+            Codec.FLOAT.optionalFieldOf("arc_gap", 0f).forGetter(AttackDefinition::arcGap),
+            Codec.FLOAT.optionalFieldOf("angle_offset", 0f).forGetter(AttackDefinition::angleOffset),
+            Codecs.VECTOR2.optionalFieldOf("offset", new Vector2()).forGetter(AttackDefinition::offset),
+            OffsetModifiers.CODEC.optionalFieldOf("offset_modifiers", OffsetModifiers.DEFAULT).forGetter(AttackDefinition::offsetModifiers)
         ).apply(instance, AttackDefinition::new);
     });
     @EditorSerializable

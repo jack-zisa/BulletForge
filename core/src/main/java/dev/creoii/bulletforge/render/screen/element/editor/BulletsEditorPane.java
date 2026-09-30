@@ -6,9 +6,18 @@ import dev.creoii.bulletforge.render.screen.EditorScreen;
 import dev.creoii.bulletforge.util.editor.EditorGenerator;
 
 public class BulletsEditorPane extends Table {
+    private final EditorScreen parent;
+
     public BulletsEditorPane(EditorScreen parent) {
+        this.parent = parent;
         top().left();
         defaults().growX().top();
         add(EditorGenerator.createBulletDictionaryEditor(parent.getConfig().bullets(), GlobalAssets.SKIN)).growX().row();
+    }
+
+    public void refresh() {
+        clearChildren();
+        add(EditorGenerator.createBulletDictionaryEditor(parent.getConfig().bullets(), GlobalAssets.SKIN)).growX().row();
+        invalidateHierarchy();
     }
 }

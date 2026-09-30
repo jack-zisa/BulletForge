@@ -42,6 +42,14 @@ public class EditorScreen extends AbstractScreen {
 
     @Override
     public void render(float delta) {
+        if (config.isDirty()) {
+            bulletEditorPane.refresh();
+            bulletManager.refresh();
+            attackEditorPane.refresh();
+            attackManager.refresh();
+            config.setNotDirty();
+        }
+
         super.render(delta);
 
         attackManager.tick(delta);

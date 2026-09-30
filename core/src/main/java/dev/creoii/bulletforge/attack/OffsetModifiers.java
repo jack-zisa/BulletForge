@@ -18,8 +18,8 @@ public final class OffsetModifiers implements EditorOption {
     public static final OffsetModifiers DEFAULT = new OffsetModifiers(false, true);
     public static final Codec<OffsetModifiers> CODEC = RecordCodecBuilder.create(instance -> {
         return instance.group(
-            Codec.BOOL.fieldOf("affect_mouse").forGetter(OffsetModifiers::affectMouse),
-            Codec.BOOL.fieldOf("rotate").forGetter(OffsetModifiers::rotate)
+            Codec.BOOL.optionalFieldOf("affect_mouse", false).forGetter(OffsetModifiers::affectMouse),
+            Codec.BOOL.optionalFieldOf("rotate", true).forGetter(OffsetModifiers::rotate)
         ).apply(instance, OffsetModifiers::new);
     });
     @EditorSerializable

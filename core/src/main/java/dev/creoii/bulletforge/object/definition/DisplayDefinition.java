@@ -10,9 +10,9 @@ public final class DisplayDefinition {
     public static final DisplayDefinition DEFAULT = new DisplayDefinition("", 10f, "");
     public static final Codec<DisplayDefinition> CODEC = RecordCodecBuilder.create(instance -> {
         return instance.group(
-            Codec.STRING.fieldOf("sprite_id").forGetter(DisplayDefinition::spriteId),
-            Codec.FLOAT.fieldOf("scale").forGetter(DisplayDefinition::scale),
-            Codec.STRING.fieldOf("shader_id").forGetter(DisplayDefinition::shaderId)
+            Codec.STRING.optionalFieldOf("sprite_id", "").forGetter(DisplayDefinition::spriteId),
+            Codec.FLOAT.optionalFieldOf("scale", 10f).forGetter(DisplayDefinition::scale),
+            Codec.STRING.optionalFieldOf("shader_id", "").forGetter(DisplayDefinition::shaderId)
         ).apply(instance, DisplayDefinition::new);
     });
     @EditorSerializable

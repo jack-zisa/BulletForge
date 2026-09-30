@@ -98,6 +98,13 @@ public class AttackManager implements InputProcessor, Tickable {
         attacks.add(new AttackInstance(this, attack));
     }
 
+    public void refresh() {
+        attacks.clear();
+        parent.getConfig().attacks().forEach(attackDefinition -> {
+            attacks.add(new AttackInstance(this, attackDefinition));
+        });
+    }
+
     public BulletForge getMain() {
         return main;
     }

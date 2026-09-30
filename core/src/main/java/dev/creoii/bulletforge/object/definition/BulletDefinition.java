@@ -17,10 +17,10 @@ public final class BulletDefinition {
     }, Either::right);
     public static final Codec<BulletDefinition> CODEC = RecordCodecBuilder.create(instance -> {
         return instance.group(
-            Codec.FLOAT.fieldOf("lifetime").forGetter(BulletDefinition::lifetime),
-            VELOCITY_CODEC.fieldOf("velocity").forGetter(BulletDefinition::velocity),
-            Codec.FLOAT.fieldOf("rotation").forGetter(BulletDefinition::rotation),
-            DisplayDefinition.CODEC.fieldOf("display").forGetter(BulletDefinition::display)
+            Codec.FLOAT.optionalFieldOf("lifetime", 2500f).forGetter(BulletDefinition::lifetime),
+            VELOCITY_CODEC.optionalFieldOf("velocity", new Vector2(100f, 0f)).forGetter(BulletDefinition::velocity),
+            Codec.FLOAT.optionalFieldOf("rotation", 0f).forGetter(BulletDefinition::rotation),
+            DisplayDefinition.CODEC.optionalFieldOf("display", DisplayDefinition.DEFAULT).forGetter(BulletDefinition::display)
         ).apply(instance, BulletDefinition::new);
     });
     @EditorSerializable
