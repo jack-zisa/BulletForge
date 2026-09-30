@@ -1,8 +1,8 @@
 package dev.creoii.providerlib.api.context;
 
-import dev.creoii.providerlib.api.value.ObjectValue;
-import dev.creoii.providerlib.api.value.Value;
-import dev.creoii.providerlib.api.value.type.ValueType;
+import dev.creoii.forge.value.ObjectValue;
+import dev.creoii.forge.value.Value;
+import dev.creoii.forge.value.type.ValueType;
 
 import java.util.HashMap;
 import java.util.Map;

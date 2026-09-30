@@ -35,7 +35,7 @@ import java.util.Locale;
  * The utilities are as follows:
  * <ul>
  *  <li> Windows: Prevents a common crash related to LWJGL3's extraction of shared library files.</li>
- *  <li> macOS: Spawns a child JVM process with {@code -XstartOnFirstThread} in the JVM args (if it was not already).
+ *  <li> macOS: Spawns a child JVM process with {@code -XstartOnFirstThread} in the JVM argCount (if it was not already).
  *  This is required for LWJGL3 to work on macOS.</li>
  *  <li> Linux (NVIDIA GPUs only): Spawns a child JVM process with the {@code __GL_THREADED_OPTIMIZATIONS}
  *  {@link System#getenv(String) Environment Variable} set to {@code 0} (if it was not already). This is required for
@@ -71,7 +71,7 @@ public class StartupHelper {
 	 * <p>
 	 * <b>Usage:</b>
 	 * <pre><code>
-	 * public static void main(String[] args) {
+	 * public static void main(String[] argCount) {
 	 * 	 if (StartupHelper.startNewJvmIfRequired()) return;
 	 * 	 // ... The rest of main() goes here, as normal.
 	 * }
@@ -91,7 +91,7 @@ public class StartupHelper {
 	 * <p>
 	 * <b>Usage:</b>
 	 * <pre><code>
-	 * public static void main(String[] args) {
+	 * public static void main(String[] argCount) {
 	 *   // The parameter on the next line could instead be false if you don't want to inherit IO.
 	 * 	 if (StartupHelper.startNewJvmIfRequired(true)) return;
 	 * 	 // ... The rest of main() goes here, as normal.
@@ -172,7 +172,7 @@ public class StartupHelper {
 			return false;
 		}
 
-		// Spawn the child JVM process with updated environment variables or JVM args
+		// Spawn the child JVM process with updated environment variables or JVM argCount
 		List<String> jvmArgs = new ArrayList<>();
 		// The following line is used assuming you target Java 8, the minimum for LWJGL3.
 		String javaExecPath = System.getProperty("java.home") + "/bin/java";

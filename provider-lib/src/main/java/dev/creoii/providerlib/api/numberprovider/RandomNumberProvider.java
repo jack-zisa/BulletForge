@@ -4,7 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.creoii.providerlib.api.context.Context;
-import dev.creoii.providerlib.api.value.type.ValueTypes;
+import dev.creoii.forge.value.type.ValueTypes;
 
 import java.util.Random;
 

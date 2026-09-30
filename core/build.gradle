@@ -24,7 +24,7 @@ dependencies {
   implementation "it.unimi.dsi:fastutil:8.5.12"
   implementation "games.spooky.gdx:gdx-nativefilechooser:2.4.0"
 
-  if(enableGraalNative == 'true') {
+  if (enableGraalNative == 'true') {
     implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"
   }
 }

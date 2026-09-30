@@ -1,4 +1,4 @@
-package dev.creoii.providerlib.api.value;
+package dev.creoii.forge.value;
 
 public record ObjectValue<T>(T value) implements Value<T> {
     @Override

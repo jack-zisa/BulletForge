@@ -1,0 +1,7 @@
+version 1
+
+condition(after(250),incr(counter,0.1))
+condition(after(500),set(value,mul(doubleAge,3)))
+condition(after(750),print(greeting))
+condition(after(1000),print(concat("Age: ",clampedAge)))
+condition(after(1250),print(if(gt(age,18),"adult","minor")))
