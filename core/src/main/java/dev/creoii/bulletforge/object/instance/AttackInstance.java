@@ -3,10 +3,10 @@ package dev.creoii.bulletforge.object.instance;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import dev.creoii.bulletforge.attack.AttackManager;
-import dev.creoii.bulletforge.attack.OffsetModifiers;
+import dev.creoii.bulletforge.object.definition.BulletNodeDefinition;
+import dev.creoii.bulletforge.util.manager.AttackManager;
+import dev.creoii.bulletforge.object.definition.OffsetModifiers;
 import dev.creoii.bulletforge.object.definition.AttackDefinition;
-import dev.creoii.bulletforge.object.definition.BulletDefinition;
 
 public class AttackInstance {
     private final AttackManager manager;
@@ -28,7 +28,7 @@ public class AttackInstance {
     }
 
     private void fire() {
-        BulletDefinition bulletDefinition = manager.getParent().getConfig().bullets().getBullet(definition.bulletId());
+        BulletNodeDefinition bulletDefinition = manager.getParent().getConfig().bullets().getBullet(definition.bulletId());
         if (bulletDefinition == null)
             return;
 
@@ -66,10 +66,10 @@ public class AttackInstance {
             float rotatedX = mouseDir.x * cos - mouseDir.y * sin;
             float rotatedY = mouseDir.y * cos + mouseDir.x * sin;
 
-            BulletInstance bullet = manager.getParent().getBulletManager().getBulletPool().obtain();
-            bullet.set(bulletDefinition);
-            bullet.spawn(spawnPos.x, spawnPos.y, rotatedX, rotatedY);
-            manager.getParent().getBulletManager().addBullet(bullet);
+            BulletNode bulletNode = bulletDefinition.type() == BulletNodeDefinition.Type.SINGLE ? manager.getParent().getBulletManager().getBulletPool().obtain() : manager.getParent().getBulletManager().getBulletGroupPool().obtain();
+            bulletNode.set(bulletDefinition);
+            bulletNode.spawn(spawnPos.x, spawnPos.y, rotatedX, rotatedY);
+            manager.getParent().getBulletManager().addBullet(bulletNode);
         }
     }
 }

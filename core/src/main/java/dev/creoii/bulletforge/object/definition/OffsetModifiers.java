@@ -1,4 +1,4 @@
-package dev.creoii.bulletforge.attack;
+package dev.creoii.bulletforge.object.definition;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;

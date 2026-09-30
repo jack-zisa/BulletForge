@@ -1,9 +1,12 @@
-package dev.creoii.bulletforge.bullet;
+package dev.creoii.bulletforge.util.manager;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.utils.Pool;
 import dev.creoii.bulletforge.BulletForge;
+import dev.creoii.bulletforge.object.definition.BulletNodeDefinition;
+import dev.creoii.bulletforge.object.instance.BulletGroupInstance;
 import dev.creoii.bulletforge.object.instance.BulletInstance;
+import dev.creoii.bulletforge.object.instance.BulletNode;
 import dev.creoii.bulletforge.render.Renderable;
 import dev.creoii.bulletforge.render.screen.EditorScreen;
 import dev.creoii.bulletforge.util.Tickable;
@@ -20,7 +23,13 @@ public class BulletManager implements Tickable, Renderable {
             return new BulletInstance();
         }
     };
-    private final Map<Long, BulletInstance> bullets;
+    private final Pool<BulletGroupInstance> bulletGroupPool = new Pool<>() {
+        @Override
+        protected BulletGroupInstance newObject() {
+            return new BulletGroupInstance();
+        }
+    };
+    private final Map<Long, BulletNode> bullets;
     private final Set<Long> toRemove;
     private final PriorityQueue<Long> ids;
     private long nextId;
@@ -39,7 +48,7 @@ public class BulletManager implements Tickable, Renderable {
         forEach(bullet -> {
             bullet.tick(dt);
 
-            if (bullet.isDead()) toRemove.add(bullet.getId());
+            if (bullet.isDead()) toRemove.add(bullet.id());
         });
 
         toRemove.forEach(this::removeBullet);
@@ -55,21 +64,28 @@ public class BulletManager implements Tickable, Renderable {
         return bulletPool;
     }
 
-    public void addBullet(BulletInstance bullet) {
+    public Pool<BulletGroupInstance> getBulletGroupPool() {
+        return bulletGroupPool;
+    }
+
+    public void addBullet(BulletNode bullet) {
         long id = ids.isEmpty() ? nextId++ : ids.poll();
         bullet.init(id);
         bullets.put(id, bullet);
     }
 
-    public void addBullet(long id, BulletInstance bullet) {
+    public void addBullet(long id, BulletNode bullet) {
         bullets.put(id, bullet);
         nextId = Math.max(nextId, id + 1);
     }
 
     public void removeBullet(long id) {
-        BulletInstance removed;
+        BulletNode removed;
         if ((removed = bullets.remove(id)) != null) {
-            bulletPool.free(removed);
+            if (removed.get().type() == BulletNodeDefinition.Type.SINGLE) {
+                bulletPool.free((BulletInstance) removed);
+            } else bulletGroupPool.free((BulletGroupInstance) removed);
+
             ids.add(id);
         }
     }
@@ -85,7 +101,7 @@ public class BulletManager implements Tickable, Renderable {
         clearBullets();
     }
 
-    public void forEach(Consumer<BulletInstance> action) {
+    public void forEach(Consumer<BulletNode> action) {
         bullets.values().forEach(action);
     }
 

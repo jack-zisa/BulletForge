@@ -1,4 +1,4 @@
-package dev.creoii.bulletforge.attack;
+package dev.creoii.bulletforge.util.manager;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;

@@ -1,25 +1,19 @@
 package dev.creoii.bulletforge.object.definition;
 
 import com.badlogic.gdx.math.Vector2;
-import com.mojang.datafixers.util.Either;
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.creoii.bulletforge.util.Codecs;
 import dev.creoii.bulletforge.util.editor.EditorSerializable;
 
 import java.util.Objects;
-import java.util.function.Function;
 
-public final class BulletDefinition {
+public final class BulletDefinition implements BulletNodeDefinition {
     public static final BulletDefinition DEFAULT = new BulletDefinition(2500f, 100f);
-    private static final Codec<Vector2> VELOCITY_CODEC = Codec.either(Codec.FLOAT, Codecs.VECTOR2).xmap(either -> {
-        return either.map(f -> new Vector2(f, 0f), Function.identity());
-    }, Either::right);
-    public static final Codec<BulletDefinition> CODEC = RecordCodecBuilder.create(instance -> {
+    public static final MapCodec<BulletDefinition> CODEC = RecordCodecBuilder.mapCodec(instance -> {
         return instance.group(
-            Codec.FLOAT.optionalFieldOf("lifetime", 2500f).forGetter(BulletDefinition::lifetime),
-            VELOCITY_CODEC.optionalFieldOf("velocity", new Vector2(100f, 0f)).forGetter(BulletDefinition::velocity),
-            Codec.FLOAT.optionalFieldOf("rotation", 0f).forGetter(BulletDefinition::rotation),
+            BulletNodeDefinition.lifetimeField(),
+            BulletNodeDefinition.velocityField(),
+            BulletNodeDefinition.rotationField(),
             DisplayDefinition.CODEC.optionalFieldOf("display", DisplayDefinition.DEFAULT).forGetter(BulletDefinition::display)
         ).apply(instance, BulletDefinition::new);
     });
@@ -59,6 +53,11 @@ public final class BulletDefinition {
         this(lifetime, new Vector2(speed, curve), rotation, display);
     }
 
+    @Override
+    public Type type() {
+        return Type.SINGLE;
+    }
+
     public float lifetime() {
         return lifetime;
     }
@@ -75,6 +74,7 @@ public final class BulletDefinition {
         return display;
     }
 
+    @Override
     public BulletDefinition copy() {
         return new BulletDefinition(lifetime, velocity.cpy(), rotation, display.copy());
     }

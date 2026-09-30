@@ -3,7 +3,6 @@ package dev.creoii.bulletforge.object.definition;
 import com.badlogic.gdx.math.Vector2;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.creoii.bulletforge.attack.OffsetModifiers;
 import dev.creoii.bulletforge.util.Codecs;
 import dev.creoii.bulletforge.util.editor.EditorSerializable;
 

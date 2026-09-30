@@ -11,20 +11,20 @@ import java.util.function.BiConsumer;
 
 public final class BulletDictionaryDefinition {
     public static final BulletDictionaryDefinition DEFAULT = new BulletDictionaryDefinition(BulletDefinition.DEFAULT);
-    public static final Codec<BulletDictionaryDefinition> CODEC = BulletDefinition.CODEC.listOf().xmap(bulletDefinitions -> {
-        return new BulletDictionaryDefinition(bulletDefinitions.toArray(BulletDefinition[]::new));
+    public static final Codec<BulletDictionaryDefinition> CODEC = BulletNodeDefinition.CODEC.listOf().xmap(bulletDefinitions -> {
+        return new BulletDictionaryDefinition(bulletDefinitions.toArray(BulletNodeDefinition[]::new));
     }, bulletDictionaryDefinition -> {
         return new ArrayList<>(bulletDictionaryDefinition.dictionary.values());
     });
-    private final Map<Integer, BulletDefinition> dictionary;
+    private final Map<Integer, BulletNodeDefinition> dictionary;
     private int nextId;
 
-    public BulletDictionaryDefinition(Map<Integer, BulletDefinition> dictionary) {
+    public BulletDictionaryDefinition(Map<Integer, BulletNodeDefinition> dictionary) {
         this.dictionary = new LinkedHashMap<>(dictionary);
         nextId = dictionary.keySet().stream().mapToInt(Integer::intValue).max().orElse(-1) + 1;
     }
 
-    public BulletDictionaryDefinition(BulletDefinition... definitions) {
+    public BulletDictionaryDefinition(BulletNodeDefinition... definitions) {
         dictionary = new LinkedHashMap<>();
         for (int i = 0; i < definitions.length; i++)
             dictionary.put(i, definitions[i]);
@@ -39,16 +39,16 @@ public final class BulletDictionaryDefinition {
         return new BulletDictionaryDefinition(dictionary);
     }
 
-    public Map<Integer, BulletDefinition> get() {
+    public Map<Integer, BulletNodeDefinition> get() {
         return dictionary;
     }
 
-    public void addBullet(BulletDefinition bullet) {
+    public void addBullet(BulletNodeDefinition bullet) {
         dictionary.put(nextId++, bullet);
     }
 
     @Nullable
-    public BulletDefinition getBullet(int id) {
+    public BulletNodeDefinition getBullet(int id) {
         return dictionary.get(id);
     }
 
@@ -56,7 +56,7 @@ public final class BulletDictionaryDefinition {
         dictionary.remove(id);
     }
 
-    public void forEach(BiConsumer<Integer, BulletDefinition> action) {
+    public void forEach(BiConsumer<Integer, BulletNodeDefinition> action) {
         dictionary.forEach(action);
     }
 
@@ -65,7 +65,7 @@ public final class BulletDictionaryDefinition {
         nextId = 0;
     }
 
-    public Collection<BulletDefinition> values() {
+    public Collection<BulletNodeDefinition> values() {
         return dictionary.values();
     }
 }
