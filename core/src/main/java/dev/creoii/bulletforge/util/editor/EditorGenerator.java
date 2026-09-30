@@ -14,9 +14,13 @@ import dev.creoii.bulletforge.GlobalAssets;
 import dev.creoii.bulletforge.object.definition.AttackDefinition;
 import dev.creoii.bulletforge.object.definition.BulletDefinition;
 import dev.creoii.bulletforge.object.definition.BulletDictionaryDefinition;
+import dev.creoii.bulletforge.object.definition.BulletNodeDefinition;
 import dev.creoii.bulletforge.render.screen.EditorScreen;
+import dev.creoii.bulletforge.render.screen.element.ExpandablePane;
 import dev.creoii.bulletforge.render.screen.element.editor.ExpandableEditorPane;
 
+import java.lang.reflect.ParameterizedType;
+import java.util.Collection;
 import java.util.List;
 
 public final class EditorGenerator {
@@ -57,17 +61,20 @@ public final class EditorGenerator {
         dictionary.forEach((id, bullet) -> {
             ExpandableEditorPane pane = new ExpandableEditorPane(bullet, skin);
 
+            String title = bullet.type() == BulletNodeDefinition.Type.SINGLE ? "Bullet" : "Bullet Group";
+
             Table header = new Table();
             Image button = new Image(new TextureRegionDrawable(GlobalAssets.DROPDOWN));
-            TextButton title = new TextButton("Bullet " + id, skin);
-            header.add(title).growX();
+            TextButton titleButton = new TextButton(String.format("%s %s", title, id), skin);
+            header.add(titleButton).growX();
             header.add(button);
 
             header.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     pane.setExpanded(!pane.isExpanded());
-                    button.setDrawable(new TextureRegionDrawable(pane.isExpanded() ? GlobalAssets.DROPUP : GlobalAssets.DROPDOWN));}
+                    button.setDrawable(new TextureRegionDrawable(pane.isExpanded() ? GlobalAssets.DROPUP : GlobalAssets.DROPDOWN));
+                }
             });
 
             TextButton removeButton = new TextButton("X", skin);
@@ -179,7 +186,7 @@ public final class EditorGenerator {
             String name = field.getName();
             Class<?> type = field.getType();
 
-            if (type.getFields().length > 0 && type != Vector2.class && type != String.class && !EditorOption.class.isAssignableFrom(type)) {
+            if (type.getFields().length > 0 && type != Vector2.class && type != String.class && !Collection.class.isAssignableFrom(type) && !EditorOption.class.isAssignableFrom(type)) {
                 try {
                     rootTable.row();
 
@@ -208,7 +215,13 @@ public final class EditorGenerator {
                 continue;
             }
 
-            if (!EditorOption.class.isAssignableFrom(type)) rootTable.add(new Label(name + ":", skin)).left();
+            if (!EditorOption.class.isAssignableFrom(type)) {
+                if (Collection.class.isAssignableFrom(type)) {
+                    createCollectionInput(rootTable, target, field, skin);
+                    continue;
+                }
+                rootTable.add(new Label(name + ":", skin)).left();
+            }
 
             if (type == int.class || type == float.class || type == double.class) {
                 createNumberInput(rootTable, target, field, skin);
@@ -220,6 +233,8 @@ public final class EditorGenerator {
                 createEnumInput(rootTable, target, field, skin);
             } else if (type == Vector2.class) {
                 createVector2Input(rootTable, target, field, skin);
+            } else if (Collection.class.isAssignableFrom(type)) {
+                createCollectionInput(rootTable, target, field, skin);
             } else if (EditorOption.class.isAssignableFrom(type)) {
                 try {
                     EditorOption option = (EditorOption) field.get(target);
@@ -367,6 +382,128 @@ public final class EditorGenerator {
             table.add(vectorTable).growX();
         } catch (ReflectionException e) {
             throw new RuntimeException("Error creating Vector2 input.", e);
+        }
+    }
+
+    private static void createCollectionInput(Table table, Object target, Field field, Skin skin) {
+        try {
+            Collection<?> collection = (Collection<?>) field.get(target);
+
+            Table collectionContent = new Table();
+            collectionContent.top().left();
+            collectionContent.defaults().growX().left();
+
+            if (collection != null) {
+                int index = 0;
+
+                for (Object element : collection) {
+                    if (element != null) {
+                        ExpandableEditorPane elementPane = new ExpandableEditorPane(element, skin);
+                        TextButton elementHeader = new TextButton("[" + index + "]", skin);
+
+                        elementHeader.addListener(new ClickListener() {
+                            @Override
+                            public void clicked(InputEvent event, float x, float y) {
+                                elementPane.setExpanded(!elementPane.isExpanded());
+                            }
+                        });
+
+                        collectionContent.add(elementHeader).growX().left().row();
+                        collectionContent.add(elementPane).growX().left().row();
+                    }
+
+                    index++;
+                }
+            }
+
+            ExpandablePane pane = new ExpandablePane(collectionContent);
+
+            Table header = new Table();
+            TextButton fieldHeader = new TextButton(field.getName(), skin);
+            TextButton addButton = new TextButton("+", skin);
+
+            header.add(fieldHeader).growX().right();
+            header.add(addButton).right();
+
+            fieldHeader.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    pane.setExpanded(!pane.isExpanded());
+                }
+            });
+
+            addButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    Class<?> type = field.getDeclaredAnnotation(EditorSerializable.class).getAnnotation(EditorSerializable.class).type();
+                    if (type == Void.class) {
+                        return;
+                    }
+
+                    if (type == null) {
+                        throw new IllegalStateException("Cannot determine collection element type for " + field.getName());
+                    }
+
+                    try {
+                        @SuppressWarnings("unchecked")
+                        Collection<Object> mutableCollection = (Collection<Object>) collection;
+
+                        mutableCollection.add(type.getDeclaredConstructor().newInstance());
+
+                        rebuildCollection(collectionContent, collection, skin);
+                    } catch (ReflectiveOperationException e) {
+                        throw new RuntimeException("Could not create collection element: " + type.getName(), e);
+                    }
+                }
+            });
+
+            table.add(header).colspan(2).growX().left().row();
+            table.add(pane).colspan(2).growX().left().row();
+
+            if (collection != null) rebuildCollection(collectionContent, collection, skin);
+        } catch (ReflectionException e) {
+            throw new RuntimeException("Error reading collection: " + field.getName(), e);
+        }
+    }
+
+    private static void rebuildCollection(Table content, Collection<?> collection, Skin skin) {
+        content.clearChildren();
+
+        int index = 0;
+        for (Object element : collection) {
+            if (element == null) continue;
+
+            ExpandableEditorPane elementPane = new ExpandableEditorPane(element, skin);
+
+            Table header = new Table();
+            TextButton name = new TextButton("[" + index + "]", skin);
+            TextButton removeButton = new TextButton("X", skin);
+
+            header.add(name).growX().top().left();
+            header.add(removeButton).width(30f).top().right().row();
+
+            name.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    elementPane.setExpanded(!elementPane.isExpanded());
+                }
+            });
+
+            removeButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    @SuppressWarnings("unchecked")
+                    Collection<Object> mutableCollection = (Collection<Object>) collection;
+                    mutableCollection.remove(element);
+
+                    rebuildCollection(content, collection, skin);
+                }
+            });
+
+            content.add(header).colspan(2).growX().left().row();
+            content.add(elementPane).colspan(2).growX().left().row();
+
+            index++;
         }
     }
 }

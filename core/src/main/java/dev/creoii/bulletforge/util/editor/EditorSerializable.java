@@ -9,4 +9,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface EditorSerializable {
     // TODO: Min/max/validation
+
+    Class<?> type() default Void.class;
 }

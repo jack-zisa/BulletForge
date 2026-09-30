@@ -26,6 +26,7 @@ public final class BulletGroupDefinition implements BulletNodeDefinition {
     private final Vector2 velocity;
     @EditorSerializable
     private float rotation;
+    @EditorSerializable(type = Child.class)
     private final List<Child> children;
 
     public BulletGroupDefinition(float lifetime, Vector2 velocity, float rotation, List<Child> children) {
@@ -106,10 +107,14 @@ public final class BulletGroupDefinition implements BulletNodeDefinition {
             "display=" + children + ']';
     }
 
-    public record Child(Offset offset, BulletDefinition definition) {
+    public record Child(@EditorSerializable Offset offset, @EditorSerializable BulletDefinition bullet) {
         public static final Codec<Child> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Offset.CODEC.fieldOf("offset").orElse(Offset.DEFAULT.copy()).forGetter(Child::offset),
-            BulletDefinition.CODEC.fieldOf("definition").forGetter(Child::definition)
+            BulletDefinition.CODEC.fieldOf("bullet").forGetter(Child::bullet)
         ).apply(instance, Child::new));
+
+        public Child() {
+            this(Offset.DEFAULT.copy(), BulletDefinition.DEFAULT.copy());
+        }
     }
 }
