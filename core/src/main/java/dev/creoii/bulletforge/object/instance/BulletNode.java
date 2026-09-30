@@ -7,6 +7,8 @@ import dev.creoii.bulletforge.util.Tickable;
 import dev.creoii.providerlib.api.context.ContextProvider;
 
 public interface BulletNode<T extends BulletNodeDefinition> extends Tickable, Renderable, Pool.Poolable, ContextProvider {
+    long id();
+
     void init(long id);
 
     void set(T definition);
@@ -15,7 +17,13 @@ public interface BulletNode<T extends BulletNodeDefinition> extends Tickable, Re
 
     void spawn(float x, float y, float dirX, float dirY);
 
-    long id();
+    BulletGroupInstance parent();
+
+    void setParent(BulletGroupInstance parent);
+
+    default void detach() {
+        setParent(null);
+    }
 
     boolean isDead();
 }

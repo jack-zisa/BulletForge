@@ -1,15 +1,13 @@
 package dev.creoii.bulletforge.object.definition;
 
-import com.badlogic.gdx.math.Vector2;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.creoii.bulletforge.util.Codecs;
 import dev.creoii.bulletforge.util.editor.EditorSerializable;
 
 import java.util.Objects;
 
 public final class AttackDefinition {
-    public static final AttackDefinition DEFAULT = new AttackDefinition(0, 100, 1, 0f, 0f, new Vector2(), OffsetModifiers.DEFAULT.copy());
+    public static final AttackDefinition DEFAULT = new AttackDefinition(0, 100, 1, 0f, 0f, Offset.DEFAULT.copy());
     public static final Codec<AttackDefinition> CODEC = RecordCodecBuilder.create(instance -> {
         return instance.group(
             Codec.INT.fieldOf("bullet_id").forGetter(AttackDefinition::bulletId),
@@ -17,8 +15,7 @@ public final class AttackDefinition {
             Codec.INT.optionalFieldOf("bullet_count", 1).forGetter(AttackDefinition::bulletCount),
             Codec.FLOAT.optionalFieldOf("arc_gap", 0f).forGetter(AttackDefinition::arcGap),
             Codec.FLOAT.optionalFieldOf("angle_offset", 0f).forGetter(AttackDefinition::angleOffset),
-            Codecs.VECTOR2.optionalFieldOf("offset", new Vector2()).forGetter(AttackDefinition::offset),
-            OffsetModifiers.CODEC.optionalFieldOf("offset_modifiers", OffsetModifiers.DEFAULT).forGetter(AttackDefinition::offsetModifiers)
+            Offset.CODEC.optionalFieldOf("offset", Offset.DEFAULT).forGetter(AttackDefinition::offset)
         ).apply(instance, AttackDefinition::new);
     });
     @EditorSerializable
@@ -32,18 +29,15 @@ public final class AttackDefinition {
     @EditorSerializable
     private float angleOffset;
     @EditorSerializable
-    private final Vector2 offset;
-    @EditorSerializable
-    private final OffsetModifiers offsetModifiers;
+    private final Offset offset;
 
-    public AttackDefinition(int bulletId, int attackSpeed, int bulletCount, float arcGap, float angleOffset, Vector2 offset, OffsetModifiers offsetModifiers) {
+    public AttackDefinition(int bulletId, int attackSpeed, int bulletCount, float arcGap, float angleOffset, Offset offset) {
         this.bulletId = bulletId;
         this.attackSpeed = attackSpeed;
         this.bulletCount = bulletCount;
         this.arcGap = arcGap;
         this.angleOffset = angleOffset;
         this.offset = offset;
-        this.offsetModifiers = offsetModifiers;
     }
 
     public int bulletId() {
@@ -66,16 +60,12 @@ public final class AttackDefinition {
         return angleOffset;
     }
 
-    public Vector2 offset() {
+    public Offset offset() {
         return offset;
     }
 
-    public OffsetModifiers offsetModifiers() {
-        return offsetModifiers;
-    }
-
     public AttackDefinition copy() {
-        return new AttackDefinition(bulletId, attackSpeed, bulletCount, arcGap, angleOffset, offset.cpy(), offsetModifiers.copy());
+        return new AttackDefinition(bulletId, attackSpeed, bulletCount, arcGap, angleOffset, offset.copy());
     }
 
     public void set(AttackDefinition attack) {
@@ -85,7 +75,6 @@ public final class AttackDefinition {
         this.arcGap = attack.arcGap;
         this.angleOffset = attack.angleOffset;
         offset.set(attack.offset);
-        offsetModifiers.set(attack.offsetModifiers);
     }
 
     @Override
@@ -98,8 +87,7 @@ public final class AttackDefinition {
             bulletCount == that.bulletCount &&
             Float.floatToIntBits(arcGap) == Float.floatToIntBits(that.arcGap) &&
             Float.floatToIntBits(angleOffset) == Float.floatToIntBits(that.angleOffset) &&
-            offset.equals(that.offset) &&
-            offsetModifiers.equals(that.offsetModifiers);
+            offset.equals(that.offset);
     }
 
     @Override
@@ -115,7 +103,6 @@ public final class AttackDefinition {
             "bulletCount=" + bulletCount + ", " +
             "arcGap=" + arcGap + ", " +
             "angleOffset=" + angleOffset + ", " +
-            "offset=" + offset + ", " +
-            "offsetModifiers=" + offsetModifiers + ']';
+            "offset=" + offset;
     }
 }

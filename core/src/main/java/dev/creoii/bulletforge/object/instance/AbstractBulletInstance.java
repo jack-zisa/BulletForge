@@ -13,12 +13,14 @@ public abstract class AbstractBulletInstance<T extends BulletNodeDefinition> imp
     protected float age;
     protected final Vector2 pos;
     protected final Vector2 direction;
+    protected BulletGroupInstance parent;
     protected boolean dead;
 
     public AbstractBulletInstance() {
         context = new Context();
         pos = new Vector2();
         direction = new Vector2();
+        parent = null;
         dead = false;
 
         context.set(BulletForgeValueTypes.AGE, age);
@@ -32,6 +34,8 @@ public abstract class AbstractBulletInstance<T extends BulletNodeDefinition> imp
             id = -1L;
             return;
         }
+
+        if (parent != null && parent.dead) detach();
 
         Vector2 velocity = definition.velocity().cpy().rotateDeg(direction.angleDeg());
         pos.mulAdd(velocity, dt);
@@ -50,6 +54,7 @@ public abstract class AbstractBulletInstance<T extends BulletNodeDefinition> imp
         age = 0f;
         pos.setZero();
         direction.setZero();
+        parent = null;
         dead = false;
 
         updateContext();
@@ -88,6 +93,16 @@ public abstract class AbstractBulletInstance<T extends BulletNodeDefinition> imp
     public void spawn(float x, float y, float dirX, float dirY) {
         pos.set(x, y);
         direction.set(dirX, dirY);
+    }
+
+    @Override
+    public BulletGroupInstance parent() {
+        return parent;
+    }
+
+    @Override
+    public void setParent(BulletGroupInstance parent) {
+        this.parent = parent;
     }
 
     @Override

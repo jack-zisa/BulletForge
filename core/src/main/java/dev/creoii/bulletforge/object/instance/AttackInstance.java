@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import dev.creoii.bulletforge.object.definition.BulletNodeDefinition;
 import dev.creoii.bulletforge.util.manager.AttackManager;
-import dev.creoii.bulletforge.object.definition.OffsetModifiers;
+import dev.creoii.bulletforge.object.definition.Offset;
 import dev.creoii.bulletforge.object.definition.AttackDefinition;
 
 public class AttackInstance {
@@ -37,24 +37,23 @@ public class AttackInstance {
         Vector3 origin = manager.getMain().getInputHandler().getCenterPos();
         Vector3 mousePos = manager.getMain().getInputHandler().getMousePos();
 
-        OffsetModifiers offsetModifiers = definition.offsetModifiers();
-        Vector2 offset = definition.offset();
+        Offset offset = definition.offset();
 
-        Vector2 effectiveOffset = new Vector2(offset);
+        Vector2 effectiveOffset = offset.offset().cpy();
 
-        if (offsetModifiers.rotate()) {
+        if (offset.rotate()) {
             Vector2 mouseDirection = new Vector2(mousePos.x - origin.x, mousePos.y - origin.y).nor();
             float angle = MathUtils.atan2(mouseDirection.y, mouseDirection.x);
             effectiveOffset.rotateRad(angle);
         }
 
-        Vector3 spawnPos = new Vector3(origin).add(effectiveOffset.x, effectiveOffset.y, 0f);
+        Vector3 spawnPos = origin.cpy().add(effectiveOffset.x, effectiveOffset.y, 0f);
 
-        if (offsetModifiers.affectMouse()) {
+        if (offset.affectMouse()) {
             mousePos.add(effectiveOffset.x, effectiveOffset.y, 0f);
         }
 
-        Vector3 mouseDir = manager.shouldTargetMouse() ? new Vector3(mousePos).sub(spawnPos).nor() : new Vector3(Vector3.X);
+        Vector3 mouseDir = manager.shouldTargetMouse() ? new Vector3(mousePos).sub(spawnPos).nor() : Vector3.X.cpy();
 
         for (int i = 0; i < definition.bulletCount(); ++i) {
             float angle = (baseAngle + i * definition.arcGap()) + definition.angleOffset();

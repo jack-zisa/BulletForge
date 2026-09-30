@@ -4,7 +4,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.creoii.bulletforge.util.Codecs;
 import dev.creoii.bulletforge.util.editor.EditorSerializable;
 
 import java.util.ArrayList;
@@ -107,11 +106,10 @@ public final class BulletGroupDefinition implements BulletNodeDefinition {
             "display=" + children + ']';
     }
 
-    public record Child(Vector2 offset, BulletDefinition definition) {
+    public record Child(Offset offset, BulletDefinition definition) {
         public static final Codec<Child> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Codecs.VECTOR2.fieldOf("offset").orElse(new Vector2()).forGetter(Child::offset),
+            Offset.CODEC.fieldOf("offset").orElse(Offset.DEFAULT.copy()).forGetter(Child::offset),
             BulletDefinition.CODEC.fieldOf("definition").forGetter(Child::definition)
         ).apply(instance, Child::new));
     }
-
 }

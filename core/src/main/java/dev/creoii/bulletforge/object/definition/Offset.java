@@ -1,5 +1,6 @@
 package dev.creoii.bulletforge.object.definition;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -9,36 +10,46 @@ import com.badlogic.gdx.utils.reflect.Field;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.creoii.bulletforge.render.screen.element.editor.ExpandableEditorPane;
+import dev.creoii.bulletforge.util.Codecs;
 import dev.creoii.bulletforge.util.editor.EditorOption;
 import dev.creoii.bulletforge.util.editor.EditorSerializable;
 
 import java.util.Objects;
 
-public final class OffsetModifiers implements EditorOption {
-    public static final OffsetModifiers DEFAULT = new OffsetModifiers(false, true);
-    public static final Codec<OffsetModifiers> CODEC = RecordCodecBuilder.create(instance -> {
+public final class Offset implements EditorOption {
+    public static final Offset DEFAULT = new Offset(new Vector2(), false, true);
+    public static final Codec<Offset> CODEC = RecordCodecBuilder.create(instance -> {
         return instance.group(
-            Codec.BOOL.optionalFieldOf("affect_mouse", false).forGetter(OffsetModifiers::affectMouse),
-            Codec.BOOL.optionalFieldOf("rotate", true).forGetter(OffsetModifiers::rotate)
-        ).apply(instance, OffsetModifiers::new);
+            Codecs.VECTOR2.optionalFieldOf("offset", new Vector2()).forGetter(Offset::offset),
+            Codec.BOOL.optionalFieldOf("affect_mouse", false).forGetter(Offset::affectMouse),
+            Codec.BOOL.optionalFieldOf("rotate", true).forGetter(Offset::rotate)
+        ).apply(instance, Offset::new);
     });
+    @EditorSerializable
+    private final Vector2 offset;
     @EditorSerializable
     private boolean affectMouse;
     @EditorSerializable
     private boolean rotate;
 
-    public OffsetModifiers(boolean affectMouse, boolean rotate) {
+    public Offset(Vector2 offset, boolean affectMouse, boolean rotate) {
+        this.offset = offset;
         this.affectMouse = affectMouse;
         this.rotate = rotate;
     }
 
-    public OffsetModifiers copy() {
-        return new OffsetModifiers(affectMouse, rotate);
+    public Offset copy() {
+        return new Offset(offset, affectMouse, rotate);
     }
 
-    public void set(OffsetModifiers offsetModifiers) {
-        affectMouse = offsetModifiers.affectMouse;
-        rotate = offsetModifiers.rotate;
+    public void set(Offset offset) {
+        this.offset.set(offset.offset);
+        affectMouse = offset.affectMouse;
+        rotate = offset.rotate;
+    }
+
+    public Vector2 offset() {
+        return offset;
     }
 
     public boolean affectMouse() {
@@ -53,25 +64,27 @@ public final class OffsetModifiers implements EditorOption {
     public boolean equals(Object obj) {
         if (obj == this) return true;
         if (obj == null || obj.getClass() != getClass()) return false;
-        var that = (OffsetModifiers) obj;
-        return affectMouse == that.affectMouse && rotate == that.rotate;
+        var that = (Offset) obj;
+        return affectMouse == that.affectMouse && rotate == that.rotate &&
+            offset.equals(that.offset);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(affectMouse, rotate);
+        return Objects.hash(affectMouse, rotate, offset);
     }
 
     @Override
     public String toString() {
-        return "OffsetModifiers[" +
+        return "Offset[" +
             "targetMouse=" + affectMouse + ", " +
-            "rotate=" + rotate + ']';
+            "rotate=" + rotate + ", " +
+            "offset=" + offset.toString() + ']';
     }
 
     @Override
     public void create(Table table, Object target, Field field, Skin skin) {
-        TextButton header = new TextButton("Offset Modifiers", skin);
+        TextButton header = new TextButton("Offset", skin);
         ExpandableEditorPane pane = new ExpandableEditorPane(this, skin);
 
         header.addListener(new ClickListener() {
