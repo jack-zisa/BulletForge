@@ -100,7 +100,15 @@ public interface BulletPathType<T extends BulletPathType.Instance<?>> extends Ed
         ORBIT(true, () -> new OrbitBulletPathType(-1, 1f)),
         PARAMETRIC(true, () -> new ParametricBulletPathType(ParametricBulletPathType.ParametricType.FIGURE_EIGHT, new Vector2(1f, 1f)));
 
-        public static final Codec<Type> CODEC = Codec.STRING.xmap(s -> Type.valueOf(s.toUpperCase()), type -> type.name().toLowerCase());
+        public static final Codec<Type> CODEC = Codec.STRING.xmap(s -> {
+            Type ret = null;
+            try {
+                ret = Type.valueOf(s.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                ret = STRAIGHT;
+            }
+            return ret;
+        }, type -> type.name().toLowerCase());
         private final boolean requiresUpdate;
         private final Supplier<BulletPathType<?>> defaultTypeInstance;
 
