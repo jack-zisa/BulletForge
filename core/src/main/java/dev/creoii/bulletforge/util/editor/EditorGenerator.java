@@ -352,8 +352,8 @@ public final class EditorGenerator {
             TextField xField = new TextField(String.valueOf(vector.x), skin);
             TextField yField = new TextField(String.valueOf(vector.y), skin);
 
-            xField.setTextFieldFilter(new TextField.TextFieldFilter.DigitsOnlyFilter());
-            yField.setTextFieldFilter(new TextField.TextFieldFilter.DigitsOnlyFilter());
+            xField.setTextFieldFilter(EditorUtils.NumberFilter.INSTANCE);
+            yField.setTextFieldFilter(EditorUtils.NumberFilter.INSTANCE);
 
             xField.addListener(new ChangeListener() {
                 @Override

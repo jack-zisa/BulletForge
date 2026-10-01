@@ -86,8 +86,15 @@ public class BulletGroupInstance extends AbstractBulletInstance implements Bulle
 
         super.tick(dt);
 
+        float rotation = get().rotation() * age;
+
         for (Child child : children.values()) {
             child.tick(dt);
+
+            if (!child.pos().equals(pos)) { // no need to rotate if the child is at the center already
+                Vector2 offset = child.offset.offset().cpy().rotateDeg(rotation);
+                child.pos().set(pos.x + offset.x, pos.y + offset.y);
+            }
 
             if (child.isDead()) {
                 toRemove.add(child.id());
