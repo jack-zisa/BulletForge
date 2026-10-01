@@ -52,14 +52,14 @@ public class FileButton extends TextButton implements TooltipProvider, OptionPro
 
     @Override
     public List<Actor> getOptions() {
-        TextButton newButton = new TextButton("New", GlobalAssets.SKIN);
+        TextButton newButton = new TextButton(main.getI18n().get("window.controlBar.file.new"), GlobalAssets.SKIN);
         newButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                main.getUserInterface().getTabManager().addTab(-1, Tab.createEditor(main, "New Pattern", new EditorScreen(main)));
+                main.getUserInterface().getTabManager().addTab(-1, Tab.createEditor(main, main.getI18n().get("tab.new_pattern"), new EditorScreen(main)));
             }
         });
-        TextButton openButton = new TextButton("Open", GlobalAssets.SKIN);
+        TextButton openButton = new TextButton(main.getI18n().get("window.controlBar.file.open"), GlobalAssets.SKIN);
         openButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -98,7 +98,7 @@ public class FileButton extends TextButton implements TooltipProvider, OptionPro
                 });
             }
         });
-        TextButton saveButton = new TextButton("Save", GlobalAssets.SKIN);
+        TextButton saveButton = new TextButton(main.getI18n().get("window.controlBar.file.save"), GlobalAssets.SKIN);
         saveButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
