@@ -4,6 +4,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.creoii.bulletforge.object.definition.path.BulletPathType;
+import dev.creoii.bulletforge.object.definition.path.StraightBulletPathType;
 import dev.creoii.bulletforge.util.editor.EditorSerializable;
 
 import java.util.ArrayList;
@@ -11,12 +13,12 @@ import java.util.List;
 import java.util.Objects;
 
 public final class BulletGroupDefinition implements BulletNodeDefinition {
-    public static final BulletGroupDefinition DEFAULT = new BulletGroupDefinition(2500f, 100f);
     public static final MapCodec<BulletGroupDefinition> CODEC = RecordCodecBuilder.mapCodec(instance -> {
         return instance.group(
             BulletNodeDefinition.lifetimeField(),
             BulletNodeDefinition.velocityField(),
             BulletNodeDefinition.rotationField(),
+            BulletNodeDefinition.pathField(),
             Child.CODEC.listOf().optionalFieldOf("children", new ArrayList<>()).forGetter(BulletGroupDefinition::children)
         ).apply(instance, BulletGroupDefinition::new);
     });
@@ -26,26 +28,21 @@ public final class BulletGroupDefinition implements BulletNodeDefinition {
     private final Vector2 velocity;
     @EditorSerializable
     private float rotation;
+    @EditorSerializable
+    private BulletPathType<?> path;
     @EditorSerializable(type = Child.class)
     private final List<Child> children;
 
-    public BulletGroupDefinition(float lifetime, Vector2 velocity, float rotation, List<Child> children) {
+    public BulletGroupDefinition(float lifetime, Vector2 velocity, float rotation, BulletPathType<?> path, List<Child> children) {
         this.lifetime = lifetime;
         this.velocity = velocity;
         this.rotation = rotation;
+        this.path = path;
         this.children = children;
     }
 
     public BulletGroupDefinition(float lifetime, float speed) {
-        this(lifetime, new Vector2(speed, 0f), 0f, new ArrayList<>());
-    }
-
-    public BulletGroupDefinition(float lifetime, float speed, float rotation) {
-        this(lifetime, new Vector2(speed, 0f), rotation, new ArrayList<>());
-    }
-
-    public BulletGroupDefinition(float lifetime, float speed, float rotation, float curve) {
-        this(lifetime, new Vector2(speed, curve), rotation, new ArrayList<>());
+        this(lifetime, new Vector2(speed, 0f), 0f, StraightBulletPathType.TYPE_INSTANCE, new ArrayList<>());
     }
 
     @Override
@@ -65,6 +62,16 @@ public final class BulletGroupDefinition implements BulletNodeDefinition {
         return rotation;
     }
 
+    @Override
+    public BulletPathType<?> path() {
+        return path;
+    }
+
+    @Override
+    public void setPath(BulletPathType<?> pathType) {
+        path = pathType;
+    }
+
     public List<Child> children() {
         return children;
     }
@@ -77,7 +84,7 @@ public final class BulletGroupDefinition implements BulletNodeDefinition {
             newChildren.add(child.copy());
         });
 
-        return new BulletGroupDefinition(lifetime, velocity.cpy(), rotation, newChildren);
+        return new BulletGroupDefinition(lifetime, velocity.cpy(), rotation, path, newChildren);
     }
 
     public void set(BulletGroupDefinition attack) {

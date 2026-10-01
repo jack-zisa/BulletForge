@@ -70,7 +70,7 @@ public class AttackInstance {
                 group.initManager(manager.getParent().getBulletManager());
             }
             bulletNode.set(bulletDefinition);
-            bulletNode.spawn(spawnPos.x, spawnPos.y, rotatedX, rotatedY);
+            bulletNode.spawn(spawnPos.x, spawnPos.y, rotatedX, rotatedY, i);
             manager.getParent().getBulletManager().addBullet(bulletNode);
         }
     }

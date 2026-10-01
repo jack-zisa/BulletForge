@@ -138,6 +138,11 @@ public class BulletGroupInstance extends AbstractBulletInstance implements Bulle
     }
 
     @Override
+    public int childrenCount() {
+        return children.size();
+    }
+
+    @Override
     public void set(BulletNodeDefinition definition) {
         super.set(definition);
 
@@ -155,13 +160,13 @@ public class BulletGroupInstance extends AbstractBulletInstance implements Bulle
     }
 
     @Override
-    public void spawn(float x, float y, float dirX, float dirY) {
-        super.spawn(x, y, dirX, dirY);
+    public void spawn(float x, float y, float dirX, float dirY, int index) {
+        super.spawn(x, y, dirX, dirY, index);
 
         for (Child child : children.values()) {
             Vector2 offset = child.offset.offset();
 
-            child.spawn(x + offset.x, y + offset.y, dirX, dirY);
+            child.spawn(x + offset.x, y + offset.y, dirX, dirY, index);
         }
     }
 
@@ -190,8 +195,8 @@ public class BulletGroupInstance extends AbstractBulletInstance implements Bulle
         }
 
         @Override
-        public void spawn(float x, float y, float dirX, float dirY) {
-            node.spawn(x, y, dirX, dirY);
+        public void spawn(float x, float y, float dirX, float dirY, int index) {
+            node.spawn(x, y, dirX, dirY, index);
         }
 
         @Override
@@ -210,8 +215,18 @@ public class BulletGroupInstance extends AbstractBulletInstance implements Bulle
         }
 
         @Override
+        public Vector2 spawnPos() {
+            return node.spawnPos();
+        }
+
+        @Override
         public float incrementAge(float f) {
             return node.incrementAge(f);
+        }
+
+        @Override
+        public int index() {
+            return node.index();
         }
 
         @Override

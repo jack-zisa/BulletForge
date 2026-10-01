@@ -3,6 +3,8 @@ package dev.creoii.bulletforge.object.definition;
 import com.badlogic.gdx.math.Vector2;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.creoii.bulletforge.object.definition.path.BulletPathType;
+import dev.creoii.bulletforge.object.definition.path.StraightBulletPathType;
 import dev.creoii.bulletforge.util.Codecs;
 
 public interface BulletNodeDefinition {
@@ -19,6 +21,10 @@ public interface BulletNodeDefinition {
 
     float rotation();
 
+    BulletPathType<?> path();
+
+    void setPath(BulletPathType<?> pathType);
+
     BulletNodeDefinition copy();
 
     static <T extends BulletNodeDefinition> RecordCodecBuilder<T, Float> lifetimeField() {
@@ -31,6 +37,10 @@ public interface BulletNodeDefinition {
 
     static <T extends BulletNodeDefinition> RecordCodecBuilder<T, Float> rotationField() {
         return Codec.FLOAT.optionalFieldOf("rotation", 0f).forGetter(BulletNodeDefinition::rotation);
+    }
+
+    static <T extends BulletNodeDefinition> RecordCodecBuilder<T, BulletPathType<?>> pathField() {
+        return BulletPathType.CODEC.fieldOf("path").orElse(StraightBulletPathType.TYPE_INSTANCE).forGetter(BulletNodeDefinition::path);
     }
 
     enum Type {

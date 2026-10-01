@@ -6,7 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 public class ExpandablePane extends Table {
     private final Container<Actor> contentContainer;
-    private final Actor content;
+    private Actor content;
     private boolean expanded;
 
     public ExpandablePane(Actor content) {
@@ -21,6 +21,11 @@ public class ExpandablePane extends Table {
         add(contentContainer).growX().left().row();
 
         setExpanded(false);
+    }
+
+    public void setContent(Actor content) {
+        this.content = content;
+        setExpanded(expanded);
     }
 
     public void setExpanded(boolean expanded) {
