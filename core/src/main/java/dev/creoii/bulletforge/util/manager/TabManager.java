@@ -1,8 +1,9 @@
-package dev.creoii.bulletforge;
+package dev.creoii.bulletforge.util.manager;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import dev.creoii.bulletforge.BulletForge;
 import dev.creoii.bulletforge.render.screen.element.Tab;
 
 public class TabManager extends Table {

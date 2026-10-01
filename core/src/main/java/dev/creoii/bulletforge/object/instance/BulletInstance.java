@@ -4,10 +4,13 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import dev.creoii.bulletforge.GlobalAssets;
 import dev.creoii.bulletforge.object.definition.BulletDefinition;
 
-public class BulletInstance extends AbstractBulletInstance<BulletDefinition> {
+public class BulletInstance extends AbstractBulletInstance {
     @Override
     public void render(Batch batch) {
-        float scale = get().display().scale();
+        float scale = 10f;
+        if (get() instanceof BulletDefinition bulletDefinition) {
+            scale = bulletDefinition.display().scale();
+        }
         float rotation = get().rotation() * age;
         batch.draw(GlobalAssets.DEFAULT_BULLET,
             pos.x - (scale / 2f), pos.y - (scale / 2f),

@@ -4,7 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import dev.creoii.bulletforge.BulletForge;
 import dev.creoii.bulletforge.GlobalAssets;
 import dev.creoii.bulletforge.util.manager.AttackManager;
-import dev.creoii.bulletforge.util.manager.BulletManager;
+import dev.creoii.bulletforge.util.manager.GlobalBulletManager;
 import dev.creoii.bulletforge.editor.EditorConfig;
 import dev.creoii.bulletforge.render.screen.element.editor.AttacksEditorPane;
 import dev.creoii.bulletforge.render.screen.element.editor.BulletsEditorPane;
@@ -14,7 +14,7 @@ public class EditorScreen extends AbstractScreen {
     private final BulletForge main;
     private final EditorConfig config;
     private final AttackManager attackManager;
-    private final BulletManager bulletManager;
+    private final GlobalBulletManager bulletManager;
     private final BulletsEditorPane bulletEditorPane;
     private final AttacksEditorPane attackEditorPane;
 
@@ -24,7 +24,7 @@ public class EditorScreen extends AbstractScreen {
         config = new EditorConfig();
 
         attackManager = new AttackManager(main, this);
-        bulletManager = new BulletManager(main, this);
+        bulletManager = new GlobalBulletManager(main, this);
 
         getRoot().setFillParent(true);
         getRoot().top().right();
@@ -81,7 +81,7 @@ public class EditorScreen extends AbstractScreen {
         return attackManager;
     }
 
-    public BulletManager getBulletManager() {
+    public GlobalBulletManager getBulletManager() {
         return bulletManager;
     }
 }

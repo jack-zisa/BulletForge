@@ -39,7 +39,7 @@ public final class Offset implements EditorOption {
     }
 
     public Offset copy() {
-        return new Offset(offset, affectMouse, rotate);
+        return new Offset(offset.cpy(), affectMouse, rotate);
     }
 
     public void set(Offset offset) {

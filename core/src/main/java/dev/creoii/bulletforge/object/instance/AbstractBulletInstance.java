@@ -3,17 +3,18 @@ package dev.creoii.bulletforge.object.instance;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import dev.creoii.bulletforge.object.definition.BulletNodeDefinition;
+import dev.creoii.bulletforge.util.manager.BulletManager;
 import dev.creoii.bulletforge.util.provider.BulletForgeValueTypes;
 import dev.creoii.providerlib.api.context.Context;
 
-public abstract class AbstractBulletInstance<T extends BulletNodeDefinition> implements BulletNode<T> {
+public abstract class AbstractBulletInstance implements BulletNode {
     private final Context context;
-    private T definition;
+    private BulletNodeDefinition definition;
     private long id;
     protected float age;
     protected final Vector2 pos;
     protected final Vector2 direction;
-    protected BulletGroupInstance parent;
+    protected BulletManager parent;
     protected boolean dead;
 
     public AbstractBulletInstance() {
@@ -34,8 +35,6 @@ public abstract class AbstractBulletInstance<T extends BulletNodeDefinition> imp
             id = -1L;
             return;
         }
-
-        if (parent != null && parent.dead) detach();
 
         Vector2 velocity = definition.velocity().cpy().rotateDeg(direction.angleDeg());
         pos.mulAdd(velocity, dt);
@@ -81,12 +80,12 @@ public abstract class AbstractBulletInstance<T extends BulletNodeDefinition> imp
     }
 
     @Override
-    public void set(T definition) {
+    public void set(BulletNodeDefinition definition) {
         this.definition = definition;
     }
 
     @Override
-    public T get() {
+    public BulletNodeDefinition get() {
         return definition;
     }
 
@@ -96,13 +95,23 @@ public abstract class AbstractBulletInstance<T extends BulletNodeDefinition> imp
     }
 
     @Override
-    public BulletGroupInstance parent() {
+    public BulletManager parent() {
         return parent;
     }
 
     @Override
-    public void setParent(BulletGroupInstance parent) {
+    public void setParent(BulletManager parent) {
         this.parent = parent;
+    }
+
+    @Override
+    public Vector2 pos() {
+        return pos;
+    }
+
+    @Override
+    public float incrementAge(float f) {
+        return age += f;
     }
 
     @Override

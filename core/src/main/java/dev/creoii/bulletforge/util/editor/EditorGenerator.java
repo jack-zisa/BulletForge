@@ -19,7 +19,6 @@ import dev.creoii.bulletforge.render.screen.EditorScreen;
 import dev.creoii.bulletforge.render.screen.element.ExpandablePane;
 import dev.creoii.bulletforge.render.screen.element.editor.ExpandableEditorPane;
 
-import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
 import java.util.List;
 
@@ -256,7 +255,7 @@ public final class EditorGenerator {
             String value = String.valueOf(field.get(target));
             TextField textField = new TextField(value, skin);
 
-            textField.setTextFieldFilter(field.getType() == int.class ? EditorUtils.DIGITS_ONLY_FILTER : EditorUtils.NumberFilter.INSTANCE);
+            textField.setTextFieldFilter(field.getType() == int.class ? EditorUtils.IntegerFilter.INSTANCE : EditorUtils.NumberFilter.INSTANCE);
             textField.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {

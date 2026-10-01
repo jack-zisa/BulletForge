@@ -15,7 +15,7 @@ public final class AttackDefinition {
             Codec.INT.optionalFieldOf("bullet_count", 1).forGetter(AttackDefinition::bulletCount),
             Codec.FLOAT.optionalFieldOf("arc_gap", 0f).forGetter(AttackDefinition::arcGap),
             Codec.FLOAT.optionalFieldOf("angle_offset", 0f).forGetter(AttackDefinition::angleOffset),
-            Offset.CODEC.optionalFieldOf("offset", Offset.DEFAULT).forGetter(AttackDefinition::offset)
+            Offset.CODEC.optionalFieldOf("offset", Offset.DEFAULT.copy()).forGetter(AttackDefinition::offset)
         ).apply(instance, AttackDefinition::new);
     });
     @EditorSerializable

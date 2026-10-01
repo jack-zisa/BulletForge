@@ -71,7 +71,13 @@ public final class BulletGroupDefinition implements BulletNodeDefinition {
 
     @Override
     public BulletGroupDefinition copy() {
-        return new BulletGroupDefinition(lifetime, velocity.cpy(), rotation, new ArrayList<>(children));
+        List<Child> newChildren = new ArrayList<>(children.size());
+
+        children.forEach(child -> {
+            newChildren.add(child.copy());
+        });
+
+        return new BulletGroupDefinition(lifetime, velocity.cpy(), rotation, newChildren);
     }
 
     public void set(BulletGroupDefinition attack) {
@@ -79,7 +85,10 @@ public final class BulletGroupDefinition implements BulletNodeDefinition {
         velocity.set(attack.velocity);
         rotation = attack.rotation;
         children.clear();
-        children.addAll(attack.children);
+
+        for (Child child : attack.children) {
+            children.add(child.copy());
+        }
     }
 
     @Override
@@ -109,12 +118,19 @@ public final class BulletGroupDefinition implements BulletNodeDefinition {
 
     public record Child(@EditorSerializable Offset offset, @EditorSerializable BulletDefinition bullet) {
         public static final Codec<Child> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Offset.CODEC.fieldOf("offset").orElse(Offset.DEFAULT.copy()).forGetter(Child::offset),
+            Offset.CODEC.optionalFieldOf("offset", Offset.DEFAULT.copy()).forGetter(Child::offset),
             BulletDefinition.CODEC.fieldOf("bullet").forGetter(Child::bullet)
         ).apply(instance, Child::new));
 
+        /**
+         * This is used when adding elements to the bullet group editor pane. Do not remove!
+         */
         public Child() {
             this(Offset.DEFAULT.copy(), BulletDefinition.DEFAULT.copy());
+        }
+
+        public Child copy() {
+            return new Child(offset.copy(), bullet.copy());
         }
     }
 }

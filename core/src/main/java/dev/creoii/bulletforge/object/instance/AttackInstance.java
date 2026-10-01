@@ -66,6 +66,9 @@ public class AttackInstance {
             float rotatedY = mouseDir.y * cos + mouseDir.x * sin;
 
             BulletNode bulletNode = bulletDefinition.type() == BulletNodeDefinition.Type.SINGLE ? manager.getParent().getBulletManager().getBulletPool().obtain() : manager.getParent().getBulletManager().getBulletGroupPool().obtain();
+            if (bulletNode instanceof BulletGroupInstance group) {
+                group.initManager(manager.getParent().getBulletManager());
+            }
             bulletNode.set(bulletDefinition);
             bulletNode.spawn(spawnPos.x, spawnPos.y, rotatedX, rotatedY);
             manager.getParent().getBulletManager().addBullet(bulletNode);
