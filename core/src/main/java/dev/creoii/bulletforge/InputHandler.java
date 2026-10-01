@@ -5,17 +5,19 @@ import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector3;
+import dev.creoii.bulletforge.render.screen.EditorScreen;
 
 import java.util.Arrays;
 
 public class InputHandler extends InputAdapter {
-    private static final Vector3 CENTER = new Vector3();
     private final BulletForge main;
     private final Vector3 mousePos;
 
     private int prevWindowWidth, prevWindowHeight;
 
-    private static final float[] ZOOM_LEVELS = {.25f, .5f, 1f, 1.5f, 2f, 2.5f};
+    private boolean dragging;
+
+    private static final float[] ZOOM_LEVELS = {.25f, .5f, 1f, 1.5f, 2f, 2.5f, 3.5f, 4.5f};
     private float zoom = 1f;
 
     public InputHandler(BulletForge main) {
@@ -44,6 +46,43 @@ public class InputHandler extends InputAdapter {
             return true;
         }
 
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        if (button == Input.Buttons.RIGHT && main.getUserInterface().getActiveScreen() instanceof EditorScreen) {
+            dragging = true;
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        if (dragging) {
+            float deltaX = Gdx.input.getDeltaX() * zoom;
+            float deltaY = Gdx.input.getDeltaY() * zoom;
+
+            main.getCamera().position.add(-deltaX, deltaY, 0);
+            main.getCamera().update();
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        if (button == Input.Buttons.RIGHT) {
+            dragging = false;
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean touchCancelled(int screenX, int screenY, int pointer, int button) {
+        if (button == Input.Buttons.RIGHT) dragging = false;
         return false;
     }
 

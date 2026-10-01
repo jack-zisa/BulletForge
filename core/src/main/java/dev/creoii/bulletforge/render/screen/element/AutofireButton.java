@@ -18,7 +18,7 @@ public class AutofireButton extends Table {
         style.checkboxOff = new TextureRegionDrawable(GlobalAssets.AUTOFIRE_OFF);
         style.checkboxOver = new TextureRegionDrawable(GlobalAssets.AUTOFIRE_OFF).tint(Color.LIGHT_GRAY);
 
-        CheckBox checkBox = new CheckBox("Autofire", style);
+        CheckBox checkBox = new CheckBox(main.getI18n().get("tool.autofire"), style);
         checkBox.setChecked(true);
         checkBox.addListener(new ClickListener() {
             @Override

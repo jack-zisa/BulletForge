@@ -18,7 +18,7 @@ public class TargetMouseButton extends Table {
         style.checkboxOff = new TextureRegionDrawable(GlobalAssets.TARGET_OFF);
         style.checkboxOver = new TextureRegionDrawable(GlobalAssets.TARGET_OFF).tint(Color.LIGHT_GRAY);
 
-        CheckBox checkBox = new CheckBox("Target Mouse", style);
+        CheckBox checkBox = new CheckBox(main.getI18n().get("tool.target_mouse"), style);
         checkBox.setChecked(false);
         checkBox.addListener(new ClickListener() {
             @Override

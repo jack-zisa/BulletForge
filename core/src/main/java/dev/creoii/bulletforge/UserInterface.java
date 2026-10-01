@@ -4,6 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import dev.creoii.bulletforge.render.screen.element.ResetPositionButton;
 import dev.creoii.bulletforge.util.manager.TabManager;
 import dev.creoii.bulletforge.render.screen.AbstractScreen;
 import dev.creoii.bulletforge.render.screen.EditorScreen;
@@ -26,6 +27,7 @@ public class UserInterface {
     private Container<Table> screenContainer;
     private AutofireButton autofireButton;
     private TargetMouseButton targetMouseButton;
+    private ResetPositionButton resetPositionButton;
     private AbstractScreen activeScreen;
 
     public UserInterface(BulletForge main) {
@@ -64,6 +66,7 @@ public class UserInterface {
 
             autofireButton.setVisible(activeScreen instanceof EditorScreen);
             targetMouseButton.setVisible(activeScreen instanceof EditorScreen);
+            resetPositionButton.setVisible(activeScreen instanceof EditorScreen);
         }
     }
 
@@ -77,8 +80,12 @@ public class UserInterface {
 
         root.add(windowControlBar = new WindowControlBar(main)).height(CONTROL_BAR_HEIGHT).growX().top().row();
         root.add(tabManager = new TabManager(main)).height(TAB_BAR_HEIGHT).growX().top().row();
-        root.add(autofireButton = new AutofireButton(main)).left().row();
-        root.add(targetMouseButton = new TargetMouseButton(main)).left().row();
+
+        Table toolsTable = new Table();
+        toolsTable.add(autofireButton = new AutofireButton(main)).left();
+        toolsTable.add(targetMouseButton = new TargetMouseButton(main)).left();
+        toolsTable.add(resetPositionButton = new ResetPositionButton(main)).left();
+        root.add(toolsTable).left().row();
         root.add(screenContainer = new Container<>()).grow().fill().row();
 
         tabManager.addTab(-1, Tab.createHome(main, new HomeScreen(main)));
