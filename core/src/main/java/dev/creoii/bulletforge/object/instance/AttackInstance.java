@@ -34,7 +34,6 @@ public class AttackInstance {
 
         float baseAngle = -definition.arcGap() * (definition.bulletCount() - 1) / 2f;
 
-        Vector3 origin = manager.getMain().getInputHandler().getCenterPos();
         Vector3 mousePos = manager.getMain().getInputHandler().getMousePos();
 
         Offset offset = definition.offset();
@@ -42,12 +41,12 @@ public class AttackInstance {
         Vector2 effectiveOffset = offset.offset().cpy();
 
         if (offset.rotate()) {
-            Vector2 mouseDirection = new Vector2(mousePos.x - origin.x, mousePos.y - origin.y).nor();
+            Vector2 mouseDirection = new Vector2(mousePos.x, mousePos.y).nor();
             float angle = MathUtils.atan2(mouseDirection.y, mouseDirection.x);
             effectiveOffset.rotateRad(angle);
         }
 
-        Vector3 spawnPos = origin.cpy().add(effectiveOffset.x, effectiveOffset.y, 0f);
+        Vector3 spawnPos = new Vector3(effectiveOffset.x, effectiveOffset.y, 0f);
 
         if (offset.affectMouse()) {
             mousePos.add(effectiveOffset.x, effectiveOffset.y, 0f);

@@ -49,6 +49,7 @@ public class BulletForge extends Game {
     public void create() {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 1280, 720);
+        camera.position.setZero();
 
         globalStage = new Stage(new ScreenViewport());
         userInterface.createGlobalActors();

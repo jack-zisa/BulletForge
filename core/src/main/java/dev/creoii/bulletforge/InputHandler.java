@@ -9,8 +9,8 @@ import com.badlogic.gdx.math.Vector3;
 import java.util.Arrays;
 
 public class InputHandler extends InputAdapter {
+    private static final Vector3 CENTER = new Vector3();
     private final BulletForge main;
-    private final Vector3 centerPos;
     private final Vector3 mousePos;
 
     private int prevWindowWidth, prevWindowHeight;
@@ -20,7 +20,6 @@ public class InputHandler extends InputAdapter {
 
     public InputHandler(BulletForge main) {
         this.main = main;
-        centerPos = new Vector3();
         mousePos = new Vector3();
     }
 
@@ -66,12 +65,12 @@ public class InputHandler extends InputAdapter {
         return mousePos;
     }
 
-    public Vector3 getCenterPos() {
-        int width = Gdx.graphics.getWidth();
-        int height = Gdx.graphics.getHeight() + ((int) UserInterface.CONTROL_BAR_HEIGHT + (int) UserInterface.TAB_BAR_HEIGHT);
-        centerPos.set(width / 2f, height / 2f, 0f);
-        main.getCamera().unproject(centerPos);
-        return centerPos;
+    public Vector3 getDirectionToMouse() {
+        return getDirectionToMouse(true);
+    }
+
+    public Vector3 getDirectionToMouse(boolean unproject) {
+        return getMousePos(unproject).cpy().nor();
     }
 
     public Vector3 getDirectionToMouse(Vector3 pos) {

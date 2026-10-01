@@ -30,10 +30,9 @@ public class DebugRenderer implements Renderer {
     }
 
     public void drawMouseLine() {
-        Vector3 centerPos = main.getInputHandler().getCenterPos();
-        Vector3 mouseDir = main.getInputHandler().getDirectionToMouse(centerPos);
-        Vector3 end = centerPos.cpy().add(mouseDir.scl(Math.min(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()) * .25f));
-        shapeRenderer.line(centerPos.x, centerPos.y, end.x, end.y);
+        Vector3 mouseDir = main.getInputHandler().getDirectionToMouse();
+        Vector3 end = new Vector3(mouseDir.scl(Math.min(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()) * .25f));
+        shapeRenderer.line(0f, 0f, end.x, end.y);
     }
 
     @Override
