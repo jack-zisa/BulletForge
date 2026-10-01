@@ -3,6 +3,8 @@ package dev.creoii.bulletforge.object.definition;
 import com.badlogic.gdx.math.Vector2;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.creoii.bulletforge.object.definition.path.BulletPathType;
+import dev.creoii.bulletforge.object.definition.path.StraightBulletPathType;
 import dev.creoii.bulletforge.util.editor.EditorSerializable;
 
 import java.util.Objects;
@@ -14,6 +16,7 @@ public final class BulletDefinition implements BulletNodeDefinition {
             BulletNodeDefinition.lifetimeField(),
             BulletNodeDefinition.velocityField(),
             BulletNodeDefinition.rotationField(),
+            BulletNodeDefinition.pathField(),
             DisplayDefinition.CODEC.optionalFieldOf("display", DisplayDefinition.DEFAULT).forGetter(BulletDefinition::display)
         ).apply(instance, BulletDefinition::new);
     });
@@ -24,33 +27,20 @@ public final class BulletDefinition implements BulletNodeDefinition {
     @EditorSerializable
     private float rotation;
     @EditorSerializable
+    private BulletPathType<?> path;
+    @EditorSerializable
     private final DisplayDefinition display;
 
-    public BulletDefinition(float lifetime, Vector2 velocity, float rotation, DisplayDefinition display) {
+    public BulletDefinition(float lifetime, Vector2 velocity, float rotation, BulletPathType<?> path, DisplayDefinition display) {
         this.lifetime = lifetime;
         this.velocity = velocity;
         this.rotation = rotation;
+        this.path = path;
         this.display = display;
     }
 
     public BulletDefinition(float lifetime, float speed) {
-        this(lifetime, new Vector2(speed, 0f), 0f, DisplayDefinition.DEFAULT);
-    }
-
-    public BulletDefinition(float lifetime, float speed, float rotation) {
-        this(lifetime, new Vector2(speed, 0f), rotation, DisplayDefinition.DEFAULT);
-    }
-
-    public BulletDefinition(float lifetime, float speed, float rotation, DisplayDefinition display) {
-        this(lifetime, new Vector2(speed, 0f), rotation, display);
-    }
-
-    public BulletDefinition(float lifetime, float speed, float rotation, float curve) {
-        this(lifetime, new Vector2(speed, curve), rotation, DisplayDefinition.DEFAULT);
-    }
-
-    public BulletDefinition(float lifetime, float speed, float curve, float rotation, DisplayDefinition display) {
-        this(lifetime, new Vector2(speed, curve), rotation, display);
+        this(lifetime, new Vector2(speed, 0f), 0f, StraightBulletPathType.TYPE_INSTANCE, DisplayDefinition.DEFAULT);
     }
 
     @Override
@@ -70,19 +60,30 @@ public final class BulletDefinition implements BulletNodeDefinition {
         return rotation;
     }
 
+    @Override
+    public BulletPathType<?> path() {
+        return path;
+    }
+
+    @Override
+    public void setPath(BulletPathType<?> pathType) {
+        path = pathType;
+    }
+
     public DisplayDefinition display() {
         return display;
     }
 
     @Override
     public BulletDefinition copy() {
-        return new BulletDefinition(lifetime, velocity.cpy(), rotation, display.copy());
+        return new BulletDefinition(lifetime, velocity.cpy(), rotation, path, display.copy());
     }
 
     public void set(BulletDefinition attack) {
         lifetime = attack.lifetime;
         velocity.set(attack.velocity);
         rotation = attack.rotation;
+        path = attack.path;
         display.set(attack.display);
     }
 
@@ -94,12 +95,13 @@ public final class BulletDefinition implements BulletNodeDefinition {
         return Float.floatToIntBits(lifetime) == Float.floatToIntBits(that.lifetime) &&
             Objects.equals(velocity, that.velocity) &&
             Float.floatToIntBits(rotation) == Float.floatToIntBits(that.rotation) &&
+            Objects.equals(path, that.path) &&
             Objects.equals(display, that.display);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(lifetime, velocity, rotation, display);
+        return Objects.hash(lifetime, velocity, rotation, path, display);
     }
 
     @Override
@@ -108,6 +110,7 @@ public final class BulletDefinition implements BulletNodeDefinition {
             "lifetime=" + lifetime + ", " +
             "velocity=" + velocity + ", " +
             "rotation=" + rotation + ", " +
+            "path=" + path + ", " +
             "display=" + display + ']';
     }
 }

@@ -241,9 +241,7 @@ public final class EditorGenerator {
                 } catch (ReflectionException e) {
                     throw new RuntimeException("Error reading field: " + field.getName(), e);
                 }
-            } else {
-                rootTable.add();
-            }
+            } else rootTable.add();
 
             rootTable.row();
         }
@@ -261,12 +259,12 @@ public final class EditorGenerator {
                 public void changed(ChangeEvent event, Actor actor) {
                     try {
                         String text = textField.getText();
-                        if (!text.isEmpty()) {
-                            if (text.endsWith(".")) text = text.substring(0, text.length() - 1);
+                        if (text.isBlank()) text = "0";
+                        if (text.endsWith(".")) text = text.substring(0, text.length() - 1);
+                        if (text.equals("-")) text = "0";
 
-                            if (field.getType() == int.class) field.set(target, (int) Float.parseFloat(text));
-                            if (field.getType() == float.class) field.set(target, Float.parseFloat(text));
-                        }
+                        if (field.getType() == int.class) field.set(target, (int) Float.parseFloat(text));
+                        if (field.getType() == float.class) field.set(target, Float.parseFloat(text));
                     } catch (ReflectionException e) {
                         e.printStackTrace();
                     }
@@ -359,7 +357,12 @@ public final class EditorGenerator {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
                     try {
-                        vector.x = Float.parseFloat(xField.getText());
+                        String text = xField.getText();
+                        if (text.isBlank()) text = "0";
+                        if (text.endsWith(".")) text = text.substring(0, text.length() - 1);
+                        if (text.equals("-")) text = "0";
+
+                        vector.x = Float.parseFloat(text);
                     } catch (NumberFormatException ignored) {}
                 }
             });
@@ -368,7 +371,12 @@ public final class EditorGenerator {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
                     try {
-                        vector.y = Float.parseFloat(yField.getText());
+                        String text = yField.getText();
+                        if (text.isBlank()) text = "0";
+                        if (text.endsWith(".")) text = text.substring(0, text.length() - 1);
+                        if (text.equals("-")) text = "0";
+
+                        vector.y = Float.parseFloat(text);
                     } catch (NumberFormatException ignored) {}
                 }
             });

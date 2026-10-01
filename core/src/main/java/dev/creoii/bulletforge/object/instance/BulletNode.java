@@ -17,9 +17,13 @@ public interface BulletNode extends Tickable, Renderable, Pool.Poolable, Context
 
     BulletNodeDefinition get();
 
-    void spawn(float x, float y, float dirX, float dirY);
+    void spawn(float x, float y, float dirX, float dirY, int index);
 
     BulletManager parent();
+
+    default int childrenCount() {
+        return 0;
+    }
 
     void setParent(BulletManager parent);
 
@@ -29,7 +33,11 @@ public interface BulletNode extends Tickable, Renderable, Pool.Poolable, Context
 
     Vector2 pos();
 
+    Vector2 spawnPos();
+
     float incrementAge(float f);
+
+    int index();
 
     boolean isDead();
 }
