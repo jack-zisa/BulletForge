@@ -16,6 +16,10 @@ public final class GlobalAssets {
     public static final Texture MAXIMIZE_ICON = new Texture(Gdx.files.internal("sprites/ui/maximize.png"));
     public static final Texture DROPDOWN = new Texture(Gdx.files.internal("sprites/ui/dropdown.png"));
     public static final Texture DROPUP = new Texture(Gdx.files.internal("sprites/ui/dropup.png"));
+    public static final Texture AUTOFIRE = new Texture(Gdx.files.internal("sprites/ui/autofire.png"));
+    public static final Texture TARGET = new Texture(Gdx.files.internal("sprites/ui/target.png"));
+    public static final Texture AUTOFIRE_OFF = new Texture(Gdx.files.internal("sprites/ui/autofire_off.png"));
+    public static final Texture TARGET_OFF = new Texture(Gdx.files.internal("sprites/ui/target_off.png"));
 
     public static final Texture DEFAULT_BULLET = new Texture(Gdx.files.internal("sprites/default_bullet.png"));
 
