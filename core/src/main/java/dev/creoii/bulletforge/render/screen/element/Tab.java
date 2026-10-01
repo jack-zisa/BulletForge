@@ -1,7 +1,9 @@
 package dev.creoii.bulletforge.render.screen.element;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -15,7 +17,7 @@ public class Tab extends Table {
     private final Type type;
     private final String title;
     private final AbstractScreen screen;
-    private final Label titleLabel;
+    private final Actor titleActor;
     private int index;
     private boolean selected;
 
@@ -33,7 +35,9 @@ public class Tab extends Table {
                 main.getUserInterface().getTabManager().removeTab(index);
             }
         });
-        add(titleLabel = new Label(getTitle(), GlobalAssets.SKIN));
+        if (type == Type.HOME) {
+            add(titleActor = new Image(GlobalAssets.HOME));
+        } else add(titleActor = new Label(getTitle(), GlobalAssets.SKIN));
         add(closeButton);
 
         addListener(new ClickListener() {
@@ -76,8 +80,8 @@ public class Tab extends Table {
         this.selected = selected;
 
         if (selected) {
-            titleLabel.setColor(Color.WHITE);
-        } else titleLabel.setColor(Color.GRAY);
+            titleActor.setColor(Color.WHITE);
+        } else titleActor.setColor(Color.GRAY);
     }
 
     public boolean isSelected() {
