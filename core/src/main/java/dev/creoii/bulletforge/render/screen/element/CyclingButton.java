@@ -40,6 +40,10 @@ public class CyclingButton<T> extends TextButton {
         return currentIndex;
     }
 
+    public void setCurrentIndex(int currentIndex) {
+        this.currentIndex = currentIndex;
+    }
+
     public void setOnChanged(@Nullable ChangeListener onChanged) {
         this.onChanged = onChanged;
     }

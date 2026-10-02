@@ -5,12 +5,12 @@ import java.util.Random;
 import java.util.function.Function;
 
 public final class DataTypes {
-    public static final DataType<Integer> INTEGER = createNumber(o -> Integer.parseInt(o.toString()));
-    public static final DataType<Byte> BYTE = createNumber(o -> Byte.parseByte(o.toString()));
-    public static final DataType<Short> SHORT = createNumber(o -> Short.parseShort(o.toString()));
-    public static final DataType<Float> FLOAT = createNumber(o -> Float.parseFloat(o.toString()));
-    public static final DataType<Double> DOUBLE = createNumber(o -> Double.parseDouble(o.toString()));
-    public static final DataType<Long> LONG = createNumber(o -> Long.parseLong(o.toString()));
+    public static final DataType<Integer> INTEGER = createNumber(o -> o.toString().isBlank() ? 0 : Integer.parseInt(o.toString()));
+    public static final DataType<Byte> BYTE = createNumber(o -> o.toString().isBlank() ? 0 : Byte.parseByte(o.toString()));
+    public static final DataType<Short> SHORT = createNumber(o -> o.toString().isBlank() ? 0 : Short.parseShort(o.toString()));
+    public static final DataType<Float> FLOAT = createNumber(o -> o.toString().isBlank() ? 0f : Float.parseFloat(o.toString()));
+    public static final DataType<Double> DOUBLE = createNumber(o -> o.toString().isBlank() ? 0d : Double.parseDouble(o.toString()));
+    public static final DataType<Long> LONG = createNumber(o -> o.toString().isBlank() ? 0L : Long.parseLong(o.toString()));
     public static final DataType<Boolean> BOOLEAN = new DataType<>() {
         @Override
         public Boolean convert(Object input) {

@@ -18,6 +18,7 @@ public record NumberFieldDynamicFieldConfig(Object owner, Field field) implement
     @Override
     public Actor create(Float value) {
         TextField textField = new TextField("", GlobalAssets.SKIN);
+        textField.setText(DataTypes.STRING.convert(value));
         textField.setTextFieldFilter(EditorUtils.NumberFilter.INSTANCE);
         textField.addListener(new ChangeListener() {
             @Override

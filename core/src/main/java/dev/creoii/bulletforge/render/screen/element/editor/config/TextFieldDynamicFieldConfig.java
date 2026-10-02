@@ -21,6 +21,7 @@ public record TextFieldDynamicFieldConfig(Object owner, Field field, String defa
     @Override
     public Actor create(String value) {
         TextField textField = new TextField(defaultText, GlobalAssets.SKIN);
+        textField.setText(value);
         textField.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {

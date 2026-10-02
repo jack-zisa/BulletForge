@@ -18,6 +18,7 @@ public record TextAreaDynamicFieldConfig(Object owner, Field field, String defau
     @Override
     public Actor create(String value) {
         TextArea textArea = new TextArea(defaultText, GlobalAssets.SKIN);
+        textArea.setText(value);
         textArea.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {

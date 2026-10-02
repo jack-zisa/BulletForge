@@ -36,7 +36,7 @@ public interface BulletNodeDefinition {
     }
 
     static <T extends BulletNodeDefinition> RecordCodecBuilder<T, Float> rotationField() {
-        return Codec.FLOAT.optionalFieldOf("rotation", 0f).forGetter(BulletNodeDefinition::rotation);
+        return Codec.floatRange(0f, 360f).optionalFieldOf("rotation", 0f).forGetter(BulletNodeDefinition::rotation);
     }
 
     static <T extends BulletNodeDefinition> RecordCodecBuilder<T, BulletPathType<?>> pathField() {

@@ -74,7 +74,7 @@ public final class DynamicUIFieldRegistry {
         );
         register(DisplayDefinition.class, definition -> new FieldBuilder<>(definition)
             .add("spriteId", TextFieldDynamicFieldConfig::new)
-            .add("scale", (displayDefinition, field) -> new NumberSliderDynamicFieldConfig(displayDefinition, field, 0f, 100f, 1f))
+            .add("scale", (displayDefinition, field) -> new NumberSliderDynamicFieldConfig(displayDefinition, field, 1f, 100f, 1f))
             .add("shaderId", TextFieldDynamicFieldConfig::new)
             .build()
         );

@@ -12,6 +12,10 @@ public interface DynamicFieldConfig<T> {
 
     Field field();
 
+    default boolean hasCustomHeader() {
+        return false;
+    }
+
     default T value() {
         try {
             Field field = field();

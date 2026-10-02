@@ -25,6 +25,6 @@ public class BulletsEditorPane extends AbstractEditorPane {
     }
 
     public Table onRefresh() {
-        return EditorUtils.createObjectEditor(getEditor().getConfig().bullets(), getSkin());
+        return EditorUtils.createObjectListEditor(getEditor().getConfig().bullets().values(), getSkin());
     }
 }

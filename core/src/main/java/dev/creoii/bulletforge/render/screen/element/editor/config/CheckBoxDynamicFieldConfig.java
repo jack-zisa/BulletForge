@@ -1,7 +1,7 @@
 package dev.creoii.bulletforge.render.screen.element.editor.config;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.reflect.Field;
 import dev.creoii.bulletforge.GlobalAssets;
@@ -14,17 +14,22 @@ public record CheckBoxDynamicFieldConfig(Object owner, Field field) implements D
         return DataTypes.BOOLEAN;
     }
 
+    public boolean hasCustomHeader() {
+        return true;
+    }
+
     @Override
     public Actor create(Boolean value) {
-        Button button = new Button(GlobalAssets.SKIN);
+        CheckBox checkBox = new CheckBox(field.getName(), GlobalAssets.SKIN);
+        checkBox.setChecked(value);
 
-        button.addListener(new ChangeListener() {
+        checkBox.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
-                set(button.isChecked());
+                set(checkBox.isChecked());
             }
         });
 
-        return button;
+        return checkBox;
     }
 }

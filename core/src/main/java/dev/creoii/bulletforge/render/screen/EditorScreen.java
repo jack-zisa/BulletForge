@@ -1,8 +1,12 @@
 package dev.creoii.bulletforge.render.screen;
 
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import dev.creoii.bulletforge.BulletForge;
 import dev.creoii.bulletforge.GlobalAssets;
+import dev.creoii.bulletforge.render.screen.element.AutofireButton;
+import dev.creoii.bulletforge.render.screen.element.ResetPositionButton;
+import dev.creoii.bulletforge.render.screen.element.TargetMouseButton;
 import dev.creoii.bulletforge.util.manager.AttackManager;
 import dev.creoii.bulletforge.util.manager.GlobalBulletManager;
 import dev.creoii.bulletforge.editor.EditorConfig;
@@ -27,19 +31,28 @@ public class EditorScreen extends AbstractScreen {
         bulletManager = new GlobalBulletManager(main, this);
 
         getRoot().setFillParent(true);
-        getRoot().top().right();
+        getRoot().top().left();
 
         ScrollPane scrollPane = new ScrollPane(bulletEditorPane = new BulletsEditorPane(this), GlobalAssets.SKIN);
         scrollPane.setFadeScrollBars(false);
         scrollPane.setOverscroll(false, false);
+        scrollPane.setScrollingDisabled(true, false);
         getRoot().add(scrollPane).width(EDITOR_PANE_WIDTH).growY().top().left();
 
-        getRoot().add().grow().fill();
+        Table center = new Table();
+        Table toolsTable = new Table();
+        toolsTable.add(new AutofireButton(main)).left();
+        toolsTable.add(new TargetMouseButton(main)).left();
+        toolsTable.add(new ResetPositionButton(main)).left();
+        center.add(toolsTable).left().row();
+        center.add().grow().fill();
+        getRoot().add(center).growX().growY().top();
 
         ScrollPane scrollPane1 = new ScrollPane(attackEditorPane = new AttacksEditorPane(this), GlobalAssets.SKIN);
         scrollPane1.setFadeScrollBars(false);
-        scrollPane.setOverscroll(false, false);
-        getRoot().add(scrollPane1).width(EDITOR_PANE_WIDTH).growY().right();
+        scrollPane1.setOverscroll(false, false);
+        scrollPane1.setScrollingDisabled(true, false);
+        getRoot().add(scrollPane1).width(EDITOR_PANE_WIDTH).growY().top().right();
     }
 
     @Override

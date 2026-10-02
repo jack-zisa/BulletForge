@@ -11,9 +11,9 @@ public final class AttackDefinition {
         return instance.group(
             Codec.INT.fieldOf("bullet_id").forGetter(AttackDefinition::bulletId),
             Codec.INT.optionalFieldOf("attack_speed", 100).forGetter(AttackDefinition::attackSpeed),
-            Codec.INT.optionalFieldOf("bullet_count", 1).forGetter(AttackDefinition::bulletCount),
-            Codec.FLOAT.optionalFieldOf("arc_gap", 0f).forGetter(AttackDefinition::arcGap),
-            Codec.FLOAT.optionalFieldOf("angle_offset", 0f).forGetter(AttackDefinition::angleOffset),
+            Codec.intRange(0, 360).optionalFieldOf("bullet_count", 1).forGetter(AttackDefinition::bulletCount),
+            Codec.floatRange(0f, 360f).optionalFieldOf("arc_gap", 0f).forGetter(AttackDefinition::arcGap),
+            Codec.floatRange(0f, 360f).optionalFieldOf("angle_offset", 0f).forGetter(AttackDefinition::angleOffset),
             Offset.CODEC.optionalFieldOf("offset", Offset.DEFAULT.copy()).forGetter(AttackDefinition::offset)
         ).apply(instance, AttackDefinition::new);
     });

@@ -20,9 +20,9 @@ public class Vector2Field extends Table {
         yField.setTextFieldFilter(EditorUtils.NumberFilter.INSTANCE);
 
         add(new Label("X", skin));
-        add(xField);
+        add(xField).growX();
         add(new Label("Y", skin));
-        add(yField);
+        add(yField).growX();
     }
 
     public TextField getXField() {

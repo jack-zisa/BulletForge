@@ -18,6 +18,8 @@ public record Vector2FieldDynamicFieldConfig(Object owner, Field field) implemen
     @Override
     public Actor create(Vector2 vector2) {
         Vector2Field vector2Field = new Vector2Field(GlobalAssets.SKIN);
+        vector2Field.getXField().setText(String.valueOf(vector2.x));
+        vector2Field.getYField().setText(String.valueOf(vector2.y));
         vector2Field.addXFieldListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {

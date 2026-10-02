@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.reflect.Field;
 import dev.creoii.bulletforge.GlobalAssets;
+import dev.creoii.bulletforge.render.screen.EditorScreen;
 import dev.creoii.bulletforge.render.screen.element.CollapsiblePane;
 import dev.creoii.bulletforge.render.screen.element.editor.DynamicUIFieldRegistry;
 import dev.creoii.providerlib.api.value.datatype.DataType;
@@ -23,26 +24,29 @@ public record ObjectDynamicFieldConfig<T>(T owner, Field field, boolean collapsi
         return DataTypes.object();
     }
 
+    public boolean hasCustomHeader() {
+        return true;
+    }
+
     @Override
     public Actor create(T value) {
-        Container<Table> container = new Container<>();
-        CollapsiblePane pane = new CollapsiblePane(container);
-
         Map<Field, DynamicFieldConfig<?>> fields = DynamicUIFieldRegistry.get(value);
         if (fields == null)
-            return container;
+            return new Container<>();
 
         Table table = new Table(GlobalAssets.SKIN);
+        table.top().left();
+        table.defaults().growX().top();
 
         for (Map.Entry<Field, DynamicFieldConfig<?>> entry : fields.entrySet()) {
             Field elementField = entry.getKey();
             DynamicFieldConfig<?> config = entry.getValue();
 
-            table.add(new Label(elementField.getName(), GlobalAssets.SKIN)).left();
-            table.add(config.create()).growX().row();
+            if (!config.hasCustomHeader()) table.add(new Label(elementField.getName(), GlobalAssets.SKIN)).left();
+            table.add(config.create()).growX().maxWidth(EditorScreen.EDITOR_PANE_WIDTH).row();
         }
 
-        container.setActor(table);
-        return collapsible ? pane : container;
+        Container<Table> container = new Container<>(table);
+        return collapsible ? new CollapsiblePane(field.getName(), container, GlobalAssets.SKIN) : container;
     }
 }

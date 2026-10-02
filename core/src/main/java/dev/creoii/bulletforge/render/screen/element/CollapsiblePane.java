@@ -1,46 +1,48 @@
 package dev.creoii.bulletforge.render.screen.element;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class CollapsiblePane extends Table {
     private final Container<Actor> contentContainer;
+    private final TextButton headerButton;
+
     private Actor content;
     private boolean expanded;
 
-    public CollapsiblePane(Actor content) {
+    public CollapsiblePane(String title, Actor content, Skin skin) {
         this.content = content;
+        setDebug(true);
 
         top().left();
         defaults().growX().left();
 
-        contentContainer = new Container<>(content);
-        contentContainer.top().left();
+        headerButton = new TextButton(title, skin);
+        headerButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                setExpanded(!expanded);
+            }
+        });
+
+        add(headerButton).growX().left().row();
+
+        contentContainer = new Container<>();
+        contentContainer.width(getWidth()).top().left();
 
         add(contentContainer).growX().left().row();
 
         setExpanded(false);
     }
 
-    public Actor getContent() {
-        return content;
-    }
-
-    public void setContent(Actor content) {
-        this.content = content;
-        setExpanded(expanded);
-    }
-
     public void setExpanded(boolean expanded) {
         this.expanded = expanded;
         contentContainer.setActor(expanded ? content : null);
-
-        invalidate();
         invalidateHierarchy();
-    }
-
-    public boolean isExpanded() {
-        return expanded;
     }
 }

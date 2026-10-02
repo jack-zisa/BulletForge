@@ -15,8 +15,14 @@ public record CycleButtonDynamicFieldConfig<T>(Object owner, Field field, T[] va
     }
 
     @Override
+    public boolean hasCustomHeader() {
+        return true;
+    }
+
+    @Override
     public Actor create(Integer value) {
-        CyclingButton<T> button = new CyclingButton<>("", values, GlobalAssets.SKIN);
+        CyclingButton<T> button = new CyclingButton<>(field.getName(), values, GlobalAssets.SKIN);
+        button.setCurrentIndex(value);
 
         button.addListener(new ChangeListener() {
             @Override

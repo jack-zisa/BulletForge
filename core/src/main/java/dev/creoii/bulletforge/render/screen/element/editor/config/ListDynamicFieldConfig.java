@@ -1,14 +1,12 @@
 package dev.creoii.bulletforge.render.screen.element.editor.config;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.reflect.Field;
 import dev.creoii.bulletforge.GlobalAssets;
+import dev.creoii.bulletforge.render.screen.EditorScreen;
 import dev.creoii.bulletforge.render.screen.element.CollapsiblePane;
 import dev.creoii.bulletforge.render.screen.element.editor.DynamicUIFieldRegistry;
 import dev.creoii.providerlib.api.value.datatype.DataType;
@@ -23,40 +21,38 @@ public record ListDynamicFieldConfig<T>(Object owner, Field field) implements Dy
         return DataTypes.collection();
     }
 
+    public boolean hasCustomHeader() {
+        return true;
+    }
+
     @Override
     public Actor create(Collection<T> value) {
-        CollapsiblePane pane = new CollapsiblePane(new List<>(GlobalAssets.SKIN));
+        Table table = new Table(GlobalAssets.SKIN);
+        table.top().left();
+        table.defaults().growX().top();
 
-        Table header = new Table();
-        TextButton fieldHeader = new TextButton(field.getName(), GlobalAssets.SKIN);
         TextButton addButton = new TextButton("+", GlobalAssets.SKIN);
+        table.add(addButton).right().row();
 
-        header.add(fieldHeader).growX().right();
-        header.add(addButton).right();
+        int index = 0;
+        for (T element : value) {
+            Table elementTable = new Table(GlobalAssets.SKIN);
+            elementTable.top().left();
+            elementTable.defaults().growX().top();
 
-        fieldHeader.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                pane.setExpanded(!pane.isExpanded());
-            }
-        });
-
-        if (pane.getContent() instanceof Table table) {
-            for (T element : value) {
-                Map<Field, DynamicFieldConfig<?>> fields = DynamicUIFieldRegistry.get(element);
-                if (fields == null)
-                    continue;
-
+            Map<Field, DynamicFieldConfig<?>> fields = DynamicUIFieldRegistry.get(element);
+            if (fields != null) {
                 for (Map.Entry<Field, DynamicFieldConfig<?>> entry : fields.entrySet()) {
-                    Field elementField = entry.getKey();
+                    Field field = entry.getKey();
                     DynamicFieldConfig<?> config = entry.getValue();
 
-                    table.add(new Label(elementField.getName(), GlobalAssets.SKIN)).left();
-                    table.add(config.create()).growX().row();
+                    if (!config.hasCustomHeader()) elementTable.add(new Label(field.getName(), GlobalAssets.SKIN)).left();
+                    elementTable.add(config.create()).growX().maxWidth(EditorScreen.EDITOR_PANE_WIDTH).row();
                 }
             }
-        }
 
-        return pane;
+            table.add(new CollapsiblePane("[" + index++ + "]", elementTable, GlobalAssets.SKIN)).growX().top().row();
+        }
+        return table;
     }
 }
