@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Array;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
@@ -20,6 +21,7 @@ import dev.creoii.bulletforge.render.screen.element.option.OptionProvider;
 import dev.creoii.bulletforge.render.screen.element.tooltip.TooltipProvider;
 import games.spooky.gdx.nativefilechooser.NativeFileChooserCallback;
 import games.spooky.gdx.nativefilechooser.NativeFileChooserIntent;
+import games.spooky.gdx.nativefilechooser.NativeFilesChooserCallback;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -64,26 +66,33 @@ public class FileButton extends TextButton implements TooltipProvider, OptionPro
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 main.getFileChooserConfiguration().intent = NativeFileChooserIntent.OPEN;
-                main.getFileChooser().chooseFile(main.getFileChooserConfiguration(), new NativeFileChooserCallback() {
+                main.getFileChooser().chooseFiles(main.getFileChooserConfiguration(), new NativeFilesChooserCallback() {
                     @Override
-                    public void onFileChosen(FileHandle file) {
-                        if (!file.extension().equals("json")) {
-                            return;
-                        }
-
-                        try {
-                            JsonElement jsonValue = BulletForge.GSON.fromJson(new FileReader(file.file()), JsonElement.class);
-                            DataResult<EditorConfig> result = EditorConfig.CODEC.parse(JsonOps.INSTANCE, jsonValue);
-
-                            if (result.isSuccess()) {
-                                EditorConfig config = result.getOrThrow();
-
-                                EditorScreen editorScreen = new EditorScreen(main);
-                                editorScreen.getConfig().set(config);
-                                main.getUserInterface().getTabManager().addTab(-1, Tab.createEditor(main, file.nameWithoutExtension(), editorScreen));
+                    public void onFilesChosen(Array<FileHandle> files) {
+                        files.forEach(file -> {
+                            if (!file.extension().equals("json")) {
+                                return;
                             }
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
+
+                            try {
+                                JsonElement jsonValue = BulletForge.GSON.fromJson(new FileReader(file.file()), JsonElement.class);
+                                DataResult<EditorConfig> result = EditorConfig.CODEC.parse(JsonOps.INSTANCE, jsonValue);
+
+                                if (result.isSuccess()) {
+                                    EditorConfig config = result.getOrThrow();
+
+                                    EditorScreen editorScreen = new EditorScreen(main);
+                                    editorScreen.getConfig().set(config);
+                                    main.getUserInterface().getTabManager().addTab(-1, Tab.createEditor(main, file.nameWithoutExtension(), editorScreen));
+                                }
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                        });
+
+                        if (!main.getCamera().position.isZero()) {
+                            main.getCamera().position.setZero();
+                            main.getCamera().update();
                         }
                     }
 

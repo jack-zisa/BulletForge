@@ -10,7 +10,6 @@ public abstract class AbstractEditorPane extends Table {
 
     protected AbstractEditorPane(String title, EditorScreen parent, Skin skin) {
         this.parent = parent;
-        setDebug(true);
 
         setSkin(skin);
         top().left();

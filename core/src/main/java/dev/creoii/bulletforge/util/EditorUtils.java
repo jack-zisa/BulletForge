@@ -11,6 +11,21 @@ import java.util.Collection;
 import java.util.Map;
 
 public final class EditorUtils {
+    public static Table createObjectListEditor(Collection<?> objects, Skin skin) {
+        Table table = new Table(skin);
+        table.top().left();
+        table.defaults().growX().top();
+
+        int index = 0;
+
+        for (Object object : objects) {
+            Table objectTable = createObjectEditor(object, skin);
+            CollapsiblePane pane = new CollapsiblePane("[" + index++ + "]", objectTable, skin);
+            table.add(pane).growX().top().row();
+        }
+        return table;
+    }
+
     public static Table createObjectEditor(Object object, Skin skin) {
         Table table = new Table(skin);
         table.top().left();
@@ -26,21 +41,6 @@ public final class EditorUtils {
 
             if (!config.hasCustomHeader()) table.add(new Label(field.getName(), skin)).left();
             table.add(config.create()).growX().maxWidth(EditorScreen.EDITOR_PANE_WIDTH).row();
-        }
-        return table;
-    }
-
-    public static Table createObjectListEditor(Collection<?> objects, Skin skin) {
-        Table table = new Table(skin);
-        table.top().left();
-        table.defaults().growX().top();
-
-        int index = 0;
-
-        for (Object object : objects) {
-            Table objectTable = createObjectEditor(object, skin);
-            CollapsiblePane pane = new CollapsiblePane("[" + index++ + "]", objectTable, skin);
-            table.add(pane).growX().top().row();
         }
         return table;
     }

@@ -17,7 +17,6 @@ public class CollapsiblePane extends Table {
 
     public CollapsiblePane(String title, Actor content, Skin skin) {
         this.content = content;
-        setDebug(true);
 
         top().left();
         defaults().growX().left();
