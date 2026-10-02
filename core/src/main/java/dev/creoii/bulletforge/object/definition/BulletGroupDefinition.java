@@ -6,7 +6,6 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.creoii.bulletforge.object.definition.path.BulletPathType;
 import dev.creoii.bulletforge.object.definition.path.StraightBulletPathType;
-import dev.creoii.bulletforge.util.editor.EditorSerializable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,15 +21,10 @@ public final class BulletGroupDefinition implements BulletNodeDefinition {
             Child.CODEC.listOf().optionalFieldOf("children", new ArrayList<>()).forGetter(BulletGroupDefinition::children)
         ).apply(instance, BulletGroupDefinition::new);
     });
-    @EditorSerializable
     private float lifetime;
-    @EditorSerializable
     private final Vector2 velocity;
-    @EditorSerializable
     private float rotation;
-    @EditorSerializable
     private BulletPathType<?> path;
-    @EditorSerializable(type = Child.class)
     private final List<Child> children;
 
     public BulletGroupDefinition(float lifetime, Vector2 velocity, float rotation, BulletPathType<?> path, List<Child> children) {
@@ -123,7 +117,7 @@ public final class BulletGroupDefinition implements BulletNodeDefinition {
             "display=" + children + ']';
     }
 
-    public record Child(@EditorSerializable Offset offset, @EditorSerializable BulletDefinition bullet) {
+    public record Child(Offset offset, BulletDefinition bullet) {
         public static final Codec<Child> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Offset.CODEC.optionalFieldOf("offset", Offset.DEFAULT.copy()).forGetter(Child::offset),
             BulletDefinition.CODEC.fieldOf("bullet").forGetter(Child::bullet)

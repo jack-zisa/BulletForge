@@ -5,7 +5,6 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.creoii.bulletforge.object.definition.path.BulletPathType;
 import dev.creoii.bulletforge.object.definition.path.StraightBulletPathType;
-import dev.creoii.bulletforge.util.editor.EditorSerializable;
 
 import java.util.Objects;
 
@@ -20,15 +19,10 @@ public final class BulletDefinition implements BulletNodeDefinition {
             DisplayDefinition.CODEC.optionalFieldOf("display", DisplayDefinition.DEFAULT).forGetter(BulletDefinition::display)
         ).apply(instance, BulletDefinition::new);
     });
-    @EditorSerializable
     private float lifetime;
-    @EditorSerializable
     private final Vector2 velocity;
-    @EditorSerializable
     private float rotation;
-    @EditorSerializable
     private BulletPathType<?> path;
-    @EditorSerializable
     private final DisplayDefinition display;
 
     public BulletDefinition(float lifetime, Vector2 velocity, float rotation, BulletPathType<?> path, DisplayDefinition display) {

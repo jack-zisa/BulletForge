@@ -2,7 +2,6 @@ package dev.creoii.bulletforge.object.definition;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.creoii.bulletforge.util.editor.EditorSerializable;
 
 import java.util.Objects;
 
@@ -18,17 +17,11 @@ public final class AttackDefinition {
             Offset.CODEC.optionalFieldOf("offset", Offset.DEFAULT.copy()).forGetter(AttackDefinition::offset)
         ).apply(instance, AttackDefinition::new);
     });
-    @EditorSerializable
     private int bulletId;
-    @EditorSerializable
     private int attackSpeed;
-    @EditorSerializable
     private int bulletCount;
-    @EditorSerializable
     private float arcGap;
-    @EditorSerializable
     private float angleOffset;
-    @EditorSerializable
     private final Offset offset;
 
     public AttackDefinition(int bulletId, int attackSpeed, int bulletCount, float arcGap, float angleOffset, Offset offset) {

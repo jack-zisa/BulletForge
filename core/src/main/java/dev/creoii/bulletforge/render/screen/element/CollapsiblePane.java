@@ -4,12 +4,12 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
-public class ExpandablePane extends Table {
+public class CollapsiblePane extends Table {
     private final Container<Actor> contentContainer;
     private Actor content;
     private boolean expanded;
 
-    public ExpandablePane(Actor content) {
+    public CollapsiblePane(Actor content) {
         this.content = content;
 
         top().left();
@@ -21,6 +21,10 @@ public class ExpandablePane extends Table {
         add(contentContainer).growX().left().row();
 
         setExpanded(false);
+    }
+
+    public Actor getContent() {
+        return content;
     }
 
     public void setContent(Actor content) {

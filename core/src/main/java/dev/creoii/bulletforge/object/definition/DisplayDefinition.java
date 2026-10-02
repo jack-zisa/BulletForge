@@ -2,7 +2,6 @@ package dev.creoii.bulletforge.object.definition;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.creoii.bulletforge.util.editor.EditorSerializable;
 
 import java.util.Objects;
 
@@ -15,11 +14,8 @@ public final class DisplayDefinition {
             Codec.STRING.optionalFieldOf("shader_id", "").forGetter(DisplayDefinition::shaderId)
         ).apply(instance, DisplayDefinition::new);
     });
-    @EditorSerializable
     private String spriteId;
-    @EditorSerializable
     private float scale;
-    @EditorSerializable
     private String shaderId;
 
     public DisplayDefinition(String spriteId, float scale, String shaderId) {

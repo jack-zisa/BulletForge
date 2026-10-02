@@ -14,8 +14,7 @@ public final class GlobalAssets {
     public static final Texture EXIT_ICON = new Texture(Gdx.files.internal("sprites/ui/exit.png"));
     public static final Texture MINIMIZE_ICON = new Texture(Gdx.files.internal("sprites/ui/minimize.png"));
     public static final Texture MAXIMIZE_ICON = new Texture(Gdx.files.internal("sprites/ui/maximize.png"));
-    public static final Texture DROPDOWN = new Texture(Gdx.files.internal("sprites/ui/dropdown.png"));
-    public static final Texture DROPUP = new Texture(Gdx.files.internal("sprites/ui/dropup.png"));
+    public static final Texture DROPARROW = new Texture(Gdx.files.internal("sprites/ui/droparrow.png"));
     public static final Texture AUTOFIRE = new Texture(Gdx.files.internal("sprites/ui/autofire.png"));
     public static final Texture TARGET = new Texture(Gdx.files.internal("sprites/ui/target.png"));
     public static final Texture AUTOFIRE_OFF = new Texture(Gdx.files.internal("sprites/ui/autofire_off.png"));

@@ -6,7 +6,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.creoii.bulletforge.object.instance.BulletNode;
-import dev.creoii.bulletforge.util.editor.EditorSerializable;
 
 import java.util.Objects;
 
@@ -15,9 +14,7 @@ public final class OrbitBulletPathType implements BulletPathType<OrbitBulletPath
         Codec.INT.fieldOf("sides").orElse(-1).forGetter(OrbitBulletPathType::sides),
         Codec.FLOAT.fieldOf("orbit_radius").orElse(1f).forGetter(OrbitBulletPathType::orbitRadius)
     ).apply(instance, OrbitBulletPathType::new));
-    @EditorSerializable
     private int sides;
-    @EditorSerializable
     private float orbitRadius;
 
     public OrbitBulletPathType(int sides, float orbitRadius) {

@@ -31,12 +31,14 @@ public class EditorScreen extends AbstractScreen {
 
         ScrollPane scrollPane = new ScrollPane(bulletEditorPane = new BulletsEditorPane(this), GlobalAssets.SKIN);
         scrollPane.setFadeScrollBars(false);
+        scrollPane.setOverscroll(false, false);
         getRoot().add(scrollPane).width(EDITOR_PANE_WIDTH).growY().top().left();
 
         getRoot().add().grow().fill();
 
         ScrollPane scrollPane1 = new ScrollPane(attackEditorPane = new AttacksEditorPane(this), GlobalAssets.SKIN);
         scrollPane1.setFadeScrollBars(false);
+        scrollPane.setOverscroll(false, false);
         getRoot().add(scrollPane1).width(EDITOR_PANE_WIDTH).growY().right();
     }
 
@@ -71,6 +73,10 @@ public class EditorScreen extends AbstractScreen {
     public void show() {
         super.show();
         main.getInput().addProcessor(2, attackManager);
+    }
+
+    public BulletForge getMain() {
+        return main;
     }
 
     public EditorConfig getConfig() {
