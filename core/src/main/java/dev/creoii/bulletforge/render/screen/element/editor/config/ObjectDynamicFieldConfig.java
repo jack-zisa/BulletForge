@@ -31,7 +31,9 @@ public record ObjectDynamicFieldConfig<T>(T owner, Field field, boolean collapsi
 
     @Override
     public Actor create(T value) {
-        Container<Table> container = new Container<>(EditorUtils.createObjectEditor(value, GlobalAssets.SKIN));
+        Table table = EditorUtils.createObjectEditor(value, GlobalAssets.SKIN);
+        table.defaults().growX();
+        Container<Table> container = new Container<>(table);
         return collapsible ? new CollapsiblePane(field.getName(), container, GlobalAssets.SKIN) : container;
     }
 }
