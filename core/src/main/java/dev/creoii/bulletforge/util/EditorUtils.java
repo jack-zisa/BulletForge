@@ -17,7 +17,6 @@ public final class EditorUtils {
         table.defaults().growX().top();
 
         int index = 0;
-
         for (Object object : objects) {
             Table objectTable = createObjectEditor(object, skin);
             CollapsiblePane pane = new CollapsiblePane("[" + index++ + "]", objectTable, skin);
@@ -28,7 +27,6 @@ public final class EditorUtils {
 
     public static Table createObjectEditor(Object object, Skin skin) {
         Table table = new Table(skin);
-        // table.setDebug(true);
         table.top().left();
         table.defaults().growX().top();
 
