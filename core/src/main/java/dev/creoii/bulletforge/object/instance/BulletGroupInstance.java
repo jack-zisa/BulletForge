@@ -19,11 +19,6 @@ public class BulletGroupInstance extends AbstractBulletInstance implements Bulle
         toRemove = new HashSet<>();
     }
 
-    @Override
-    public BulletManager parent() {
-        return parent;
-    }
-
     public void initManager(BulletManager parent) {
         this.parent = parent;
     }
@@ -79,11 +74,6 @@ public class BulletGroupInstance extends AbstractBulletInstance implements Bulle
 
     @Override
     public void tick(float dt) {
-        if (dead) {
-            detachChildren();
-            return;
-        }
-
         super.tick(dt);
 
         float rotation = get().rotation() * age;
@@ -111,6 +101,11 @@ public class BulletGroupInstance extends AbstractBulletInstance implements Bulle
     }
 
     @Override
+    public void onDead() {
+        detachChildren();
+    }
+
+    @Override
     public void refresh() {
         detachChildren();
         toRemove.clear();
@@ -122,7 +117,6 @@ public class BulletGroupInstance extends AbstractBulletInstance implements Bulle
         detachChildren();
         children.clear();
         toRemove.clear();
-        parent = null;
     }
 
     public void detachChildren() {

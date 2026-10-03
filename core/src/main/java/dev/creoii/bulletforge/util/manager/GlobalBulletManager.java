@@ -2,6 +2,7 @@ package dev.creoii.bulletforge.util.manager;
 
 import com.badlogic.gdx.utils.Pool;
 import dev.creoii.bulletforge.BulletForge;
+import dev.creoii.bulletforge.object.instance.BulletEmitterInstance;
 import dev.creoii.bulletforge.object.instance.BulletGroupInstance;
 import dev.creoii.bulletforge.object.instance.BulletInstance;
 import dev.creoii.bulletforge.object.instance.BulletNode;
@@ -9,7 +10,7 @@ import dev.creoii.bulletforge.render.screen.EditorScreen;
 
 public class GlobalBulletManager extends AbstractBulletManager {
     private final BulletForge main;
-    private final EditorScreen parent;
+    private final EditorScreen editor;
 
     private final Pool<BulletInstance> bulletPool = new Pool<>() {
         @Override
@@ -25,9 +26,20 @@ public class GlobalBulletManager extends AbstractBulletManager {
         }
     };
 
-    public GlobalBulletManager(BulletForge main, EditorScreen parent) {
+    private final Pool<BulletEmitterInstance> bulletEmitterPool = new Pool<>() {
+        @Override
+        protected BulletEmitterInstance newObject() {
+            return new BulletEmitterInstance();
+        }
+    };
+
+    public GlobalBulletManager(BulletForge main, EditorScreen editor) {
         this.main = main;
-        this.parent = parent;
+        this.editor = editor;
+    }
+
+    public EditorScreen getEditor() {
+        return editor;
     }
 
     @Override
@@ -39,6 +51,8 @@ public class GlobalBulletManager extends AbstractBulletManager {
     protected void free(BulletNode bullet) {
         if (bullet instanceof BulletGroupInstance group) {
             bulletGroupPool.free(group);
+        } else if (bullet instanceof BulletEmitterInstance emitter) {
+            bulletEmitterPool.free(emitter);
         } else bulletPool.free((BulletInstance) bullet);
     }
 
@@ -50,5 +64,10 @@ public class GlobalBulletManager extends AbstractBulletManager {
     @Override
     public Pool<BulletGroupInstance> getBulletGroupPool() {
         return bulletGroupPool;
+    }
+
+    @Override
+    public Pool<BulletEmitterInstance> getBulletEmitterPool() {
+        return bulletEmitterPool;
     }
 }

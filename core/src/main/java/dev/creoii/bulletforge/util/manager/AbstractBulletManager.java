@@ -8,12 +8,14 @@ import java.util.*;
 
 public abstract class AbstractBulletManager implements BulletManager {
     protected final Map<Long, BulletNode> bullets;
+    protected final List<BulletNode> toAdd;
     protected final Set<Long> toRemove;
     protected final PriorityQueue<Long> ids;
     protected long nextId;
 
     protected AbstractBulletManager() {
         bullets = new HashMap<>();
+        toAdd = new ArrayList<>();
         toRemove = new HashSet<>();
         ids = new PriorityQueue<>();
         nextId = 0L;
@@ -35,15 +37,30 @@ public abstract class AbstractBulletManager implements BulletManager {
         adoptBullet(bullet);
     }
 
-    @Override
-    public void adoptBullet(BulletNode bullet) {
+    public void queueAddBullet(BulletNode bullet) {
+        bullet.init(allocateId());
         bullet.setParent(this);
-        bullets.put(bullet.id(), bullet);
+        toAdd.add(bullet);
         nextId = Math.max(nextId, bullet.id() + 1);
 
         if (bullet instanceof BulletGroupInstance group) {
             group.initManager(this);
         }
+    }
+
+    @Override
+    public void adoptBullet(BulletNode bullet) {
+        bullet.setParent(this);
+        addBulletInternal(bullet);
+        nextId = Math.max(nextId, bullet.id() + 1);
+
+        if (bullet instanceof BulletGroupInstance group) {
+            group.initManager(this);
+        }
+    }
+
+    private void addBulletInternal(BulletNode bullet) {
+        bullets.put(bullet.id(), bullet);
     }
 
     @Override
@@ -72,6 +89,11 @@ public abstract class AbstractBulletManager implements BulletManager {
             }
         }
 
+        for (BulletNode bullet : toAdd) {
+            addBulletInternal(bullet);
+        }
+        toAdd.clear();
+
         toRemove.forEach(this::removeBullet);
         toRemove.clear();
     }
@@ -84,6 +106,7 @@ public abstract class AbstractBulletManager implements BulletManager {
     @Override
     public void refresh() {
         bullets.clear();
+        toAdd.clear();
         toRemove.clear();
         ids.clear();
         nextId = 0L;

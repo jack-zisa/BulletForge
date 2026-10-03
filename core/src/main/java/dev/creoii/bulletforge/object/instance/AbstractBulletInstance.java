@@ -41,7 +41,10 @@ public abstract class AbstractBulletInstance implements BulletNode {
 
     @Override
     public void tick(float dt) {
-        if (dead) return;
+        if (dead) {
+            onDead();
+            return;
+        }
 
         age += dt;
 
@@ -67,6 +70,8 @@ public abstract class AbstractBulletInstance implements BulletNode {
     }
 
     public abstract void render(Batch batch);
+
+    public abstract void onDead();
 
     @Override
     public void reset() {

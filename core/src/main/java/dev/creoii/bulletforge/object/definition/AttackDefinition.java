@@ -7,7 +7,7 @@ import dev.creoii.bulletforge.util.editor.EditorSerializable;
 import java.util.Objects;
 
 public final class AttackDefinition {
-    public static final AttackDefinition DEFAULT = new AttackDefinition(0, 100, 1, 0f, 0f, Offset.DEFAULT.copy());
+    public static final AttackDefinition DEFAULT = new AttackDefinition(0, 100, 1, 0f, 0f, 0f, true, Offset.DEFAULT.copy());
     public static final Codec<AttackDefinition> CODEC = RecordCodecBuilder.create(instance -> {
         return instance.group(
             Codec.INT.fieldOf("bullet_id").forGetter(AttackDefinition::bulletId),
@@ -15,6 +15,8 @@ public final class AttackDefinition {
             Codec.INT.optionalFieldOf("bullet_count", 1).forGetter(AttackDefinition::bulletCount),
             Codec.FLOAT.optionalFieldOf("arc_gap", 0f).forGetter(AttackDefinition::arcGap),
             Codec.FLOAT.optionalFieldOf("angle_offset", 0f).forGetter(AttackDefinition::angleOffset),
+            Codec.floatRange(0f, 360f).optionalFieldOf("rotation", 0f).forGetter(AttackDefinition::rotation),
+            Codec.BOOL.optionalFieldOf("rotate_on_shoot", true).forGetter(AttackDefinition::rotateOnShoot),
             Offset.CODEC.optionalFieldOf("offset", Offset.DEFAULT.copy()).forGetter(AttackDefinition::offset)
         ).apply(instance, AttackDefinition::new);
     });
@@ -29,14 +31,20 @@ public final class AttackDefinition {
     @EditorSerializable
     private float angleOffset;
     @EditorSerializable
+    private float rotation;
+    @EditorSerializable
+    private boolean rotateOnShoot;
+    @EditorSerializable
     private final Offset offset;
 
-    public AttackDefinition(int bulletId, int attackSpeed, int bulletCount, float arcGap, float angleOffset, Offset offset) {
+    public AttackDefinition(int bulletId, int attackSpeed, int bulletCount, float arcGap, float angleOffset, float rotation, boolean rotateOnShoot, Offset offset) {
         this.bulletId = bulletId;
         this.attackSpeed = attackSpeed;
         this.bulletCount = bulletCount;
         this.arcGap = arcGap;
         this.angleOffset = angleOffset;
+        this.rotation = rotation;
+        this.rotateOnShoot = rotateOnShoot;
         this.offset = offset;
     }
 
@@ -60,12 +68,20 @@ public final class AttackDefinition {
         return angleOffset;
     }
 
+    public float rotation() {
+        return rotation;
+    }
+
+    public boolean rotateOnShoot() {
+        return rotateOnShoot;
+    }
+
     public Offset offset() {
         return offset;
     }
 
     public AttackDefinition copy() {
-        return new AttackDefinition(bulletId, attackSpeed, bulletCount, arcGap, angleOffset, offset.copy());
+        return new AttackDefinition(bulletId, attackSpeed, bulletCount, arcGap, angleOffset, rotation, rotateOnShoot, offset.copy());
     }
 
     public void set(AttackDefinition attack) {
@@ -74,6 +90,8 @@ public final class AttackDefinition {
         this.bulletCount = attack.bulletCount;
         this.arcGap = attack.arcGap;
         this.angleOffset = attack.angleOffset;
+        this.rotation = attack.rotation;
+        this.rotateOnShoot = attack.rotateOnShoot;
         offset.set(attack.offset);
     }
 
@@ -87,12 +105,14 @@ public final class AttackDefinition {
             bulletCount == that.bulletCount &&
             Float.floatToIntBits(arcGap) == Float.floatToIntBits(that.arcGap) &&
             Float.floatToIntBits(angleOffset) == Float.floatToIntBits(that.angleOffset) &&
+            Float.floatToIntBits(rotation) == Float.floatToIntBits(that.rotation) &&
+            rotateOnShoot == that.rotateOnShoot &&
             offset.equals(that.offset);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(bulletId, attackSpeed, bulletCount, arcGap, angleOffset, offset);
+        return Objects.hash(bulletId, attackSpeed, bulletCount, arcGap, angleOffset, rotation, rotateOnShoot, offset);
     }
 
     @Override
@@ -103,6 +123,8 @@ public final class AttackDefinition {
             "bulletCount=" + bulletCount + ", " +
             "arcGap=" + arcGap + ", " +
             "angleOffset=" + angleOffset + ", " +
+            "rotation=" + rotation + ", " +
+            "rotateOnShoot=" + rotateOnShoot + ", " +
             "offset=" + offset;
     }
 }

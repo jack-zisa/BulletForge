@@ -23,4 +23,8 @@ public class BulletInstance extends AbstractBulletInstance {
             false, false
         );
     }
+
+    @Override
+    public void onDead() {
+    }
 }

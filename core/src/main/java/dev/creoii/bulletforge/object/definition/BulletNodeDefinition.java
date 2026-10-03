@@ -10,6 +10,7 @@ import dev.creoii.bulletforge.util.Codecs;
 public interface BulletNodeDefinition {
     Codec<BulletNodeDefinition> CODEC = BulletNodeDefinition.Type.CODEC.dispatch(BulletNodeDefinition::type, type -> switch (type) {
         case GROUP -> BulletGroupDefinition.CODEC;
+        case EMITTER -> BulletEmitterDefinition.CODEC;
         default -> BulletDefinition.CODEC;
     });
 
@@ -45,7 +46,8 @@ public interface BulletNodeDefinition {
 
     enum Type {
         SINGLE,
-        GROUP;
+        GROUP,
+        EMITTER;
 
         public static final Codec<Type> CODEC = Codec.STRING.xmap(s -> Type.valueOf(s.toUpperCase()), type -> type.name().toLowerCase());
     }

@@ -2,12 +2,22 @@ package dev.creoii.bulletforge.util.manager;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.utils.Pool;
+import dev.creoii.bulletforge.object.instance.BulletEmitterInstance;
 import dev.creoii.bulletforge.object.instance.BulletGroupInstance;
 import dev.creoii.bulletforge.object.instance.BulletInstance;
 import dev.creoii.bulletforge.object.instance.BulletNode;
 
 public interface BulletManager {
     BulletManager parent();
+
+    default GlobalBulletManager getMaster() {
+        BulletManager manager = this;
+        while (manager != null) {
+            if (manager instanceof GlobalBulletManager global) return global;
+            manager = manager.parent();
+        }
+        return null;
+    }
 
     long allocateId();
 
@@ -33,5 +43,9 @@ public interface BulletManager {
 
     default Pool<BulletGroupInstance> getBulletGroupPool() {
         return parent().getBulletGroupPool();
+    }
+
+    default Pool<BulletEmitterInstance> getBulletEmitterPool() {
+        return parent().getBulletEmitterPool();
     }
 }
