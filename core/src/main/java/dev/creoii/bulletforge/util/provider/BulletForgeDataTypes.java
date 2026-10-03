@@ -12,6 +12,7 @@ public class BulletForgeDataTypes {
             if (input instanceof Vector2 vector2) return vector2;
             else if (input instanceof Vector3 vector3) return new Vector2(vector3.x, vector3.y);
             else if (input instanceof Vector4 vector4) return new Vector2(vector4.x, vector4.y);
+            else if (input instanceof Number number) return new Vector2(number.floatValue(), 0f);
             throw new IllegalArgumentException("Cannot convert " + input.getClass().getSimpleName() + " to Vector2");
         }
 
@@ -20,6 +21,7 @@ public class BulletForgeDataTypes {
             if (targetType == Vector2.class) return value;
             if (targetType == Vector3.class) return new Vector3(value.x, value.y, 0f);
             if (targetType == Vector4.class) return new Vector4(value.x, value.y, 0f, 0f);
+            if (targetType.isAssignableFrom(Number.class)) return value.x;
             throw new IllegalArgumentException("Cannot convert Vector2 to " + targetType.getSimpleName());
         }
     };

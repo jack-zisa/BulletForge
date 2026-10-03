@@ -30,7 +30,5 @@ public class AutofireButton extends Table {
         });
 
         add(checkBox);
-
-        setVisible(false);
     }
 }

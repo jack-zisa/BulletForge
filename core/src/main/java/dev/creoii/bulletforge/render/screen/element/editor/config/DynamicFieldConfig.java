@@ -12,7 +12,17 @@ public interface DynamicFieldConfig<T> {
 
     Field field();
 
+    /**
+     * @return true if this dynamic UI config creates its own header element, or false if one should be created for it.
+     */
     default boolean hasCustomHeader() {
+        return false;
+    }
+
+    /**
+     * @return true if this dynamic UI config creates a nested element & should be extended to fill to the width of its parent.
+     */
+    default boolean isNested() {
         return false;
     }
 

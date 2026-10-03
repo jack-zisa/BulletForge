@@ -30,7 +30,5 @@ public class TargetMouseButton extends Table {
         });
 
         add(checkBox);
-
-        setVisible(false);
     }
 }

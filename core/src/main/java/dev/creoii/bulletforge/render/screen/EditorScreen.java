@@ -41,12 +41,12 @@ public class EditorScreen extends AbstractScreen {
 
         Table center = new Table();
         Table toolsTable = new Table();
-        toolsTable.add(new AutofireButton(main)).left();
-        toolsTable.add(new TargetMouseButton(main)).left();
-        toolsTable.add(new ResetPositionButton(main)).left();
-        center.add(toolsTable).left().row();
-        center.add().grow().fill();
-        getRoot().add(center).growX().growY().top();
+        toolsTable.add(new AutofireButton(main)).left().top();
+        toolsTable.add(new TargetMouseButton(main)).left().top();
+        toolsTable.add(new ResetPositionButton(main)).left().top();
+        center.add(toolsTable).top().left().row();
+        center.add().grow();
+        getRoot().add(center).grow().top();
 
         ScrollPane scrollPane1 = new ScrollPane(attackEditorPane = new AttacksEditorPane(this), GlobalAssets.SKIN);
         scrollPane1.setFadeScrollBars(false);

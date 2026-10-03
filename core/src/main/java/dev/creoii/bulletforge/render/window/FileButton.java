@@ -59,8 +59,13 @@ public class FileButton extends TextButton implements TooltipProvider, OptionPro
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 main.getUserInterface().getTabManager().addTab(-1, Tab.createEditor(main, main.getI18n().get("tab.new_pattern"), new EditorScreen(main)));
+                if (!main.getCamera().position.isZero()) {
+                    main.getCamera().position.setZero();
+                    main.getCamera().update();
+                }
             }
         });
+
         TextButton openButton = new TextButton(main.getI18n().get("window.controlBar.file.open"), GlobalAssets.SKIN);
         openButton.addListener(new ClickListener() {
             @Override
@@ -107,6 +112,7 @@ public class FileButton extends TextButton implements TooltipProvider, OptionPro
                 });
             }
         });
+
         TextButton saveButton = new TextButton(main.getI18n().get("window.controlBar.file.save"), GlobalAssets.SKIN);
         saveButton.addListener(new ClickListener() {
             @Override

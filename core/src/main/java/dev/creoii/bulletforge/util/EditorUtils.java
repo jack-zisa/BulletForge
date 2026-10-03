@@ -1,5 +1,6 @@
 package dev.creoii.bulletforge.util;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.reflect.Field;
 import dev.creoii.bulletforge.render.screen.EditorScreen;
@@ -28,8 +29,9 @@ public final class EditorUtils {
 
     public static Table createObjectEditor(Object object, Skin skin) {
         Table table = new Table(skin);
+        // table.setDebug(true);
         table.top().left();
-        table.defaults().growX().top();
+        table.defaults().top();
 
         Map<Field, DynamicFieldConfig<?>> fields = DynamicUIFieldRegistry.get(object);
         if (fields == null)

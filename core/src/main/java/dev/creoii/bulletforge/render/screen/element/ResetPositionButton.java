@@ -34,7 +34,5 @@ public class ResetPositionButton extends Table {
                 main.getCamera().update();
             }
         });
-
-        setVisible(false);
     }
 }
