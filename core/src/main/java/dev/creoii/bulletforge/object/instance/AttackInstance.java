@@ -41,7 +41,7 @@ public class AttackInstance {
         }
 
         if (!definition.rotateOnShoot())
-            rotate(definition.rotation());
+            rotate(definition.rotation() * dt);
     }
 
     public void rotate(float angle) {
