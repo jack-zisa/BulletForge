@@ -30,6 +30,8 @@ public record CheckBoxDynamicFieldConfig(Object owner, Field field) implements D
             }
         });
 
+        checkBox.left();
+
         return checkBox;
     }
 }

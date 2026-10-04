@@ -43,17 +43,17 @@ public record NumberSliderDynamicFieldConfig(Object owner, Field field, float mi
             public void changed(ChangeEvent event, Actor actor) {
                 float f = Math.clamp(slider.getValue(), min, max);
                 set(f);
-                textField.setText(Float.toString(f));
+                textField.setText(String.valueOf(f));
             }
         });
 
-        // TODO: Fix
         slider.addListener(new InputListener() {
             @Override
             public boolean scrolled(InputEvent event, float x, float y, float amountX, float amountY) {
                 if (amountY != 0f) {
                     float f = Math.clamp(slider.getValue(), min, max);
                     slider.setValue(amountY > 0f ? f + 1 : f - 1);
+                    textField.setText(String.valueOf(f));
                     return true;
                 }
                 return false;

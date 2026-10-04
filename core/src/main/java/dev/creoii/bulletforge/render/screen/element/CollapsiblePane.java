@@ -32,7 +32,7 @@ public class CollapsiblePane extends Table {
         add(headerButton).growX().left().row();
 
         contentContainer = new Container<>();
-        contentContainer.width(getWidth()).top().left();
+        contentContainer.fillX().top().left();
 
         add(contentContainer).growX().left().row();
 
